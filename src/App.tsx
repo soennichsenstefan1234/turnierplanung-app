@@ -111,6 +111,22 @@ function pageInnerStyle(isMobile: boolean): React.CSSProperties {
   };
 }
 
+function mobileViewportCardStyle(isMobile: boolean): React.CSSProperties {
+  return isMobile
+    ? {
+        width: "calc(100vw - 24px)",
+        maxWidth: "calc(100vw - 24px)",
+        margin: "0 auto",
+        boxSizing: "border-box",
+      }
+    : {
+        width: "100%",
+        maxWidth: "100%",
+        margin: "0 auto",
+        boxSizing: "border-box",
+      };
+}
+
 function cardStyle(): React.CSSProperties {
   return {
     background: COLORS.card,
@@ -772,7 +788,7 @@ export default function App() {
     return (
       <div style={shellStyle(isMobile)}>
         <div style={pageInnerStyle(isMobile)}>
-          <div style={{ ...cardStyle(), maxWidth: 700, margin: "0 auto" }}>
+          <div style={{ ...cardStyle(), ...mobileViewportCardStyle(isMobile), maxWidth: 700 }}>
             <h2 style={{ marginTop: 0, color: COLORS.red }}>Fehler beim Laden</h2>
             <div style={{ color: COLORS.redDark, marginBottom: 14 }}>{loadError}</div>
             <button onClick={() => void loadAll()} style={primaryButton()}>
@@ -798,10 +814,9 @@ export default function App() {
           <div
             style={{
               ...cardStyle(),
-              width: "100%",
+              ...mobileViewportCardStyle(isMobile),
               maxWidth: 460,
               textAlign: "center",
-              margin: "0 auto",
             }}
           >
             {clubLogo ? (
@@ -888,6 +903,7 @@ export default function App() {
         <div style={pageInnerStyle(isMobile)}>
           <div
             style={{
+              ...mobileViewportCardStyle(isMobile),
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
@@ -899,9 +915,7 @@ export default function App() {
               padding: isMobile ? 14 : "18px 20px",
               boxShadow: "0 8px 22px rgba(2,43,69,0.08)",
               border: `1px solid ${COLORS.line}`,
-              width: "100%",
               minWidth: 0,
-              boxSizing: "border-box",
             }}
           >
             <div
@@ -978,7 +992,14 @@ export default function App() {
             </div>
           </div>
 
-          <div style={{ ...cardStyle(), padding: 0, overflow: "hidden" }}>
+          <div
+            style={{
+              ...cardStyle(),
+              ...mobileViewportCardStyle(isMobile),
+              padding: 0,
+              overflow: "hidden",
+            }}
+          >
             <div
               style={{
                 background: COLORS.blue,
@@ -1779,6 +1800,7 @@ export default function App() {
       <div style={pageInnerStyle(isMobile)}>
         <div
           style={{
+            ...mobileViewportCardStyle(isMobile),
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
@@ -1790,9 +1812,7 @@ export default function App() {
             padding: isMobile ? 14 : "18px 20px",
             boxShadow: "0 8px 22px rgba(2,43,69,0.08)",
             border: `1px solid ${COLORS.line}`,
-            width: "100%",
             minWidth: 0,
-            boxSizing: "border-box",
           }}
         >
           <div
@@ -1879,7 +1899,7 @@ export default function App() {
             minWidth: 0,
           }}
         >
-          <div style={cardStyle()}>
+          <div style={{ ...cardStyle(), ...mobileViewportCardStyle(isMobile) }}>
             <div style={sectionTitleStyle()}>Turniere</div>
 
             <div style={{ display: "grid", gap: 8, minWidth: 0 }}>
@@ -1933,7 +1953,13 @@ export default function App() {
             </div>
           </div>
 
-          <div style={{ ...cardStyle(), minWidth: 0 }}>
+          <div
+            style={{
+              ...cardStyle(),
+              ...mobileViewportCardStyle(isMobile),
+              minWidth: 0,
+            }}
+          >
             {activeTournament ? (
               <>
                 <h2
