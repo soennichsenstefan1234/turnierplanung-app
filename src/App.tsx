@@ -110,8 +110,8 @@ function cardStyle(): React.CSSProperties {
     border: `1px solid ${COLORS.line}`,
     boxSizing: "border-box",
     width: "100%",
-    minWidth: 0,
     maxWidth: "100%",
+    minWidth: 0,
   };
 }
 
@@ -1023,11 +1023,13 @@ export default function App() {
             {adminTab === "turniere" ? (
               <div
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr",
+                  display: "flex",
+                  flexDirection: "column",
                   gap: 18,
-                  alignItems: "start",
+                  alignItems: "stretch",
                   width: "100%",
+                  maxWidth: "100%",
+                  overflowX: "hidden",
                   minWidth: 0,
                 }}
               >
@@ -1038,6 +1040,7 @@ export default function App() {
                     borderRadius: 14,
                     padding: 14,
                     width: "100%",
+                    maxWidth: "100%",
                     minWidth: 0,
                     boxSizing: "border-box",
                   }}
@@ -1171,6 +1174,7 @@ export default function App() {
                     borderRadius: 14,
                     padding: 14,
                     width: "100%",
+                    maxWidth: "100%",
                     minWidth: 0,
                     boxSizing: "border-box",
                   }}
@@ -1194,6 +1198,7 @@ export default function App() {
                             background: COLORS.soft,
                             border: `1px solid ${COLORS.line}`,
                             width: "100%",
+                            maxWidth: "100%",
                             minWidth: 0,
                             boxSizing: "border-box",
                           }}
@@ -1348,11 +1353,13 @@ export default function App() {
             {adminTab === "spieler" ? (
               <div
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr",
+                  display: "flex",
+                  flexDirection: "column",
                   gap: 18,
-                  alignItems: "start",
+                  alignItems: "stretch",
                   width: "100%",
+                  maxWidth: "100%",
+                  overflowX: "hidden",
                   minWidth: 0,
                 }}
               >
@@ -1363,6 +1370,7 @@ export default function App() {
                     borderRadius: 14,
                     padding: 14,
                     width: "100%",
+                    maxWidth: "100%",
                     minWidth: 0,
                     boxSizing: "border-box",
                   }}
@@ -1435,6 +1443,7 @@ export default function App() {
                     borderRadius: 14,
                     padding: 14,
                     width: "100%",
+                    maxWidth: "100%",
                     minWidth: 0,
                     boxSizing: "border-box",
                   }}
