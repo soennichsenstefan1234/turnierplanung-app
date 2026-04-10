@@ -91,7 +91,7 @@ function shellStyle(isMobile: boolean): React.CSSProperties {
   return {
     minHeight: "100vh",
     background: `linear-gradient(180deg, ${COLORS.bg} 0%, #eef2f7 100%)`,
-    padding: isMobile ? 12 : 20,
+    padding: isMobile ? 0 : 20,
     fontFamily: "Arial, sans-serif",
     color: COLORS.text,
     boxSizing: "border-box",
@@ -100,13 +100,14 @@ function shellStyle(isMobile: boolean): React.CSSProperties {
   };
 }
 
-function pageInnerStyle(): React.CSSProperties {
+function pageInnerStyle(isMobile: boolean): React.CSSProperties {
   return {
-    width: "100%",
-    maxWidth: 1100,
+    width: isMobile ? "calc(100vw - 24px)" : "100%",
+    maxWidth: isMobile ? "calc(100vw - 24px)" : 1100,
     margin: "0 auto",
     boxSizing: "border-box",
     minWidth: 0,
+    padding: isMobile ? "12px 0" : 0,
   };
 }
 
@@ -847,7 +848,7 @@ export default function App() {
   if (loadError) {
     return (
       <div style={shellStyle(isMobile)}>
-        <div style={pageInnerStyle()}>
+        <div style={pageInnerStyle(isMobile)}>
           <div style={cardStyle()}>
             <h2 style={{ marginTop: 0, color: COLORS.red }}>Fehler beim Laden</h2>
             <div style={{ color: COLORS.redDark, marginBottom: 14 }}>{loadError}</div>
@@ -870,7 +871,7 @@ export default function App() {
           justifyContent: "center",
         }}
       >
-        <div style={{ ...pageInnerStyle(), maxWidth: 460 }}>
+        <div style={{ ...pageInnerStyle(isMobile), maxWidth: isMobile ? "calc(100vw - 24px)" : 460 }}>
           <div style={{ ...cardStyle(), textAlign: "center" }}>
             {clubLogo ? (
               <img
@@ -953,7 +954,7 @@ export default function App() {
   if (isAdmin) {
     return (
       <div style={shellStyle(isMobile)}>
-        <div style={pageInnerStyle()}>
+        <div style={pageInnerStyle(isMobile)}>
           <AppHeader
             isMobile={isMobile}
             clubLogo={clubLogo}
@@ -1612,7 +1613,7 @@ export default function App() {
 
   return (
     <div style={shellStyle(isMobile)}>
-      <div style={pageInnerStyle()}>
+      <div style={pageInnerStyle(isMobile)}>
         <AppHeader
           isMobile={isMobile}
           clubLogo={clubLogo}
