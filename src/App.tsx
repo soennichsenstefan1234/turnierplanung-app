@@ -101,6 +101,16 @@ function shellStyle(isMobile: boolean): React.CSSProperties {
   };
 }
 
+function pageInnerStyle(isMobile: boolean): React.CSSProperties {
+  return {
+    width: "100%",
+    maxWidth: isMobile ? 420 : 1200,
+    margin: "0 auto",
+    minWidth: 0,
+    boxSizing: "border-box",
+  };
+}
+
 function cardStyle(): React.CSSProperties {
   return {
     background: COLORS.card,
@@ -761,12 +771,14 @@ export default function App() {
   if (loadError) {
     return (
       <div style={shellStyle(isMobile)}>
-        <div style={{ ...cardStyle(), maxWidth: 700, margin: "0 auto" }}>
-          <h2 style={{ marginTop: 0, color: COLORS.red }}>Fehler beim Laden</h2>
-          <div style={{ color: COLORS.redDark, marginBottom: 14 }}>{loadError}</div>
-          <button onClick={() => void loadAll()} style={primaryButton()}>
-            Erneut laden
-          </button>
+        <div style={pageInnerStyle(isMobile)}>
+          <div style={{ ...cardStyle(), maxWidth: 700, margin: "0 auto" }}>
+            <h2 style={{ marginTop: 0, color: COLORS.red }}>Fehler beim Laden</h2>
+            <div style={{ color: COLORS.redDark, marginBottom: 14 }}>{loadError}</div>
+            <button onClick={() => void loadAll()} style={primaryButton()}>
+              Erneut laden
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -782,86 +794,89 @@ export default function App() {
           justifyContent: "center",
         }}
       >
-        <div
-          style={{
-            ...cardStyle(),
-            width: "100%",
-            maxWidth: 460,
-            textAlign: "center",
-          }}
-        >
-          {clubLogo ? (
-            <img
-              src={clubLogo}
-              alt="Logo"
-              style={{
-                width: 82,
-                height: 82,
-                objectFit: "cover",
-                borderRadius: 16,
-                marginBottom: 14,
-                border: `2px solid ${COLORS.red}`,
-              }}
-            />
-          ) : null}
-
-          <h1
+        <div style={pageInnerStyle(isMobile)}>
+          <div
             style={{
-              marginTop: 0,
-              fontSize: isMobile ? 28 : 38,
-              lineHeight: 1.15,
-              color: COLORS.blue,
-              wordBreak: "break-word",
+              ...cardStyle(),
+              width: "100%",
+              maxWidth: 460,
+              textAlign: "center",
+              margin: "0 auto",
             }}
           >
-            {appTitle}
-          </h1>
+            {clubLogo ? (
+              <img
+                src={clubLogo}
+                alt="Logo"
+                style={{
+                  width: 82,
+                  height: 82,
+                  objectFit: "cover",
+                  borderRadius: 16,
+                  marginBottom: 14,
+                  border: `2px solid ${COLORS.red}`,
+                }}
+              />
+            ) : null}
 
-          <p style={{ color: COLORS.muted, fontSize: 17 }}>Bitte melde dich an.</p>
-
-          {players.length === 0 ? (
-            <div
+            <h1
               style={{
-                padding: 14,
-                borderRadius: 12,
-                background: COLORS.yellowSoft,
-                border: `1px solid ${COLORS.yellow}`,
+                marginTop: 0,
+                fontSize: isMobile ? 28 : 38,
+                lineHeight: 1.15,
                 color: COLORS.blue,
+                wordBreak: "break-word",
               }}
             >
-              Es sind noch keine Spieler vorhanden.
-            </div>
-          ) : (
-            <>
-              <select
-                value={selectedPlayerId}
-                style={selectStyle({ marginBottom: 12 })}
-                onChange={(e) => setSelectedPlayerId(e.target.value)}
-              >
-                {players.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.name}
-                    {p.role ? ` - ${p.role}` : ""}
-                  </option>
-                ))}
-              </select>
+              {appTitle}
+            </h1>
 
-              <input
-                type="password"
-                placeholder="Passwort"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") login();
+            <p style={{ color: COLORS.muted, fontSize: 17 }}>Bitte melde dich an.</p>
+
+            {players.length === 0 ? (
+              <div
+                style={{
+                  padding: 14,
+                  borderRadius: 12,
+                  background: COLORS.yellowSoft,
+                  border: `1px solid ${COLORS.yellow}`,
+                  color: COLORS.blue,
                 }}
-                style={inputStyle({ marginBottom: 12 })}
-              />
+              >
+                Es sind noch keine Spieler vorhanden.
+              </div>
+            ) : (
+              <>
+                <select
+                  value={selectedPlayerId}
+                  style={selectStyle({ marginBottom: 12 })}
+                  onChange={(e) => setSelectedPlayerId(e.target.value)}
+                >
+                  {players.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
+                      {p.role ? ` - ${p.role}` : ""}
+                    </option>
+                  ))}
+                </select>
 
-              <button onClick={login} style={{ ...primaryButton(), width: "100%" }}>
-                Anmelden
-              </button>
-            </>
-          )}
+                <input
+                  type="password"
+                  placeholder="Passwort"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") login();
+                  }}
+                  style={inputStyle({ marginBottom: 12 })}
+                />
+
+                <button onClick={login} style={{ ...primaryButton(), width: "100%" }}>
+                  Anmelden
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </div>
     );
@@ -870,6 +885,898 @@ export default function App() {
   if (isAdmin) {
     return (
       <div style={shellStyle(isMobile)}>
+        <div style={pageInnerStyle(isMobile)}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: 16,
+              marginBottom: 20,
+              flexWrap: "wrap",
+              background: COLORS.white,
+              borderRadius: 18,
+              padding: isMobile ? 14 : "18px 20px",
+              boxShadow: "0 8px 22px rgba(2,43,69,0.08)",
+              border: `1px solid ${COLORS.line}`,
+              width: "100%",
+              minWidth: 0,
+              boxSizing: "border-box",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 14,
+                minWidth: 0,
+                flex: "1 1 auto",
+              }}
+            >
+              {clubLogo ? (
+                <img
+                  src={clubLogo}
+                  alt="Logo"
+                  style={{
+                    height: isMobile ? 54 : 64,
+                    width: isMobile ? 54 : 64,
+                    borderRadius: 12,
+                    objectFit: "cover",
+                    border: `2px solid ${COLORS.red}`,
+                    flexShrink: 0,
+                  }}
+                />
+              ) : null}
+
+              <div style={{ minWidth: 0 }}>
+                <h1
+                  style={{
+                    margin: 0,
+                    fontSize: isMobile ? 20 : 30,
+                    lineHeight: 1.15,
+                    color: COLORS.blue,
+                    wordBreak: "break-word",
+                  }}
+                >
+                  {appTitle}
+                </h1>
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: isMobile ? "stretch" : "center",
+                gap: 12,
+                flexWrap: "wrap",
+                justifyContent: "flex-end",
+                width: isMobile ? "100%" : "auto",
+                minWidth: 0,
+              }}
+            >
+              <div
+                style={{
+                  fontSize: 15,
+                  color: COLORS.muted,
+                  textAlign: isMobile ? "left" : "right",
+                  lineHeight: 1.35,
+                  minWidth: 0,
+                  flex: isMobile ? "1 1 100%" : "0 1 auto",
+                  wordBreak: "break-word",
+                }}
+              >
+                Angemeldet als <strong style={{ color: COLORS.blue }}>{currentUser.name}</strong>
+                {currentUser.role ? ` · ${currentUser.role}` : ""}
+              </div>
+
+              <button
+                onClick={logout}
+                style={dangerButton({ width: isMobile ? "100%" : "auto" })}
+              >
+                Abmelden
+              </button>
+            </div>
+          </div>
+
+          <div style={{ ...cardStyle(), padding: 0, overflow: "hidden" }}>
+            <div
+              style={{
+                background: COLORS.blue,
+                padding: isMobile ? "14px" : "14px 16px",
+                borderBottom: `1px solid ${COLORS.blue}`,
+              }}
+            >
+              <div
+                style={{ fontSize: isMobile ? 18 : 20, fontWeight: 800, color: COLORS.white }}
+              >
+                Admin-Bereich
+              </div>
+              <div style={{ fontSize: 13, color: "#d7e4ef", marginTop: 4 }}>
+                Verwaltung von Turnieren, Spielern und Einstellungen
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                gap: 10,
+                padding: isMobile ? 12 : 16,
+                flexWrap: "wrap",
+                borderBottom: `1px solid ${COLORS.line}`,
+                background: "#f7fafc",
+                width: "100%",
+                boxSizing: "border-box",
+              }}
+            >
+              <button
+                onClick={() => setAdminTab("turniere")}
+                style={adminTab === "turniere" ? primaryButton() : mutedButton()}
+              >
+                Turniere
+              </button>
+
+              <button
+                onClick={() => setAdminTab("spieler")}
+                style={adminTab === "spieler" ? primaryButton() : mutedButton()}
+              >
+                Spieler
+              </button>
+
+              <button
+                onClick={() => setAdminTab("einstellungen")}
+                style={adminTab === "einstellungen" ? primaryButton() : mutedButton()}
+              >
+                Einstellungen
+              </button>
+            </div>
+
+            <div
+              style={{
+                padding: isMobile ? 12 : 16,
+                width: "100%",
+                boxSizing: "border-box",
+                minWidth: 0,
+              }}
+            >
+              {adminTab === "turniere" ? (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 18,
+                    alignItems: "stretch",
+                    width: "100%",
+                    maxWidth: "100%",
+                    overflowX: "hidden",
+                    minWidth: 0,
+                  }}
+                >
+                  <div
+                    style={{
+                      background: COLORS.soft,
+                      border: `1px solid ${COLORS.line}`,
+                      borderRadius: 14,
+                      padding: 14,
+                      width: "100%",
+                      maxWidth: "100%",
+                      minWidth: 0,
+                      boxSizing: "border-box",
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: 18,
+                        fontWeight: 800,
+                        marginBottom: 12,
+                        color: COLORS.blue,
+                      }}
+                    >
+                      {editingTournamentId ? "Turnier bearbeiten" : "Turnier anlegen"}
+                    </div>
+
+                    <div style={{ display: "grid", gap: 10, width: "100%", minWidth: 0 }}>
+                      <input
+                        placeholder="Turniername"
+                        value={tournamentTitle}
+                        onChange={(e) => setTournamentTitle(e.target.value)}
+                        style={inputStyle()}
+                      />
+
+                      <input
+                        type="date"
+                        value={tournamentDate}
+                        onChange={(e) => setTournamentDate(e.target.value)}
+                        style={inputStyle()}
+                      />
+
+                      <select
+                        value={registrationTime}
+                        onChange={(e) => setRegistrationTime(e.target.value)}
+                        style={selectStyle()}
+                      >
+                        <option value="">Meldung auswählen</option>
+                        {timeOptions.map((time) => (
+                          <option key={`reg-${time}`} value={time}>
+                            {time}
+                          </option>
+                        ))}
+                      </select>
+
+                      <select
+                        value={startTime}
+                        onChange={(e) => setStartTime(e.target.value)}
+                        style={selectStyle()}
+                      >
+                        <option value="">Beginn auswählen</option>
+                        {timeOptions.map((time) => (
+                          <option key={`start-${time}`} value={time}>
+                            {time}
+                          </option>
+                        ))}
+                      </select>
+
+                      <input
+                        placeholder="Ort"
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                        style={inputStyle()}
+                      />
+
+                      <select
+                        value={teamName}
+                        onChange={(e) => setTeamName(e.target.value)}
+                        style={selectStyle()}
+                      >
+                        {teamOptions.map((team) => (
+                          <option key={team} value={team}>
+                            {team}
+                          </option>
+                        ))}
+                      </select>
+
+                      <select
+                        value={tournamentType}
+                        onChange={(e) => setTournamentType(e.target.value)}
+                        style={selectStyle()}
+                      >
+                        <option value="Freies-Turnier">Freies-Turnier</option>
+                        <option value="Herren-Turnier">Herren-Turnier</option>
+                        <option value="Damen-Turnier">Damen-Turnier</option>
+                        <option value="Ü50-Turnier">Ü50-Turnier</option>
+                      </select>
+
+                      <select
+                        value={hasPasses}
+                        onChange={(e) => setHasPasses(e.target.value)}
+                        style={selectStyle()}
+                      >
+                        <option value="ja">ja</option>
+                        <option value="nein">nein</option>
+                      </select>
+
+                      <textarea
+                        placeholder="Bemerkung"
+                        value={notes}
+                        onChange={(e) => setNotes(e.target.value)}
+                        style={{ ...inputStyle(), minHeight: 90, resize: "vertical" }}
+                      />
+
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: 10,
+                          flexWrap: "wrap",
+                          width: "100%",
+                        }}
+                      >
+                        <button
+                          onClick={saveTournament}
+                          style={successButton({ width: isMobile ? "100%" : "auto" })}
+                        >
+                          {editingTournamentId ? "Änderungen speichern" : "Turnier speichern"}
+                        </button>
+                        <button
+                          onClick={resetTournamentForm}
+                          style={mutedButton({ width: isMobile ? "100%" : "auto" })}
+                        >
+                          Zurücksetzen
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    style={{
+                      background: COLORS.white,
+                      border: `1px solid ${COLORS.line}`,
+                      borderRadius: 14,
+                      padding: 14,
+                      width: "100%",
+                      maxWidth: "100%",
+                      minWidth: 0,
+                      boxSizing: "border-box",
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: 16,
+                        fontWeight: 800,
+                        marginBottom: 10,
+                        color: COLORS.blue,
+                      }}
+                    >
+                      Gemeldete Turniere
+                    </div>
+
+                    <div style={{ display: "grid", gap: 10, width: "100%", minWidth: 0 }}>
+                      {tournaments.map((t) => {
+                        const tournamentEntries = entries
+                          .filter((e) => String(e.tournament_id) === String(t.id))
+                          .sort((a, b) => a.player_name.localeCompare(b.player_name, "de"));
+
+                        return (
+                          <div
+                            key={t.id}
+                            style={{
+                              padding: 14,
+                              borderRadius: 12,
+                              background: COLORS.soft,
+                              border: `1px solid ${COLORS.line}`,
+                              width: "100%",
+                              maxWidth: "100%",
+                              minWidth: 0,
+                              boxSizing: "border-box",
+                            }}
+                          >
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                gap: 10,
+                                alignItems: "flex-start",
+                                flexWrap: "wrap",
+                                marginBottom: 12,
+                                minWidth: 0,
+                              }}
+                            >
+                              <div style={{ minWidth: 0, flex: 1 }}>
+                                <div
+                                  style={{
+                                    fontWeight: 800,
+                                    fontSize: 17,
+                                    color: COLORS.blue,
+                                    wordBreak: "break-word",
+                                    overflowWrap: "anywhere",
+                                  }}
+                                >
+                                  {t.title}
+                                </div>
+                              </div>
+
+                              <div
+                                style={{
+                                  display: "flex",
+                                  gap: 6,
+                                  flexWrap: "wrap",
+                                  width: isMobile ? "100%" : "auto",
+                                }}
+                              >
+                                <button
+                                  onClick={() => editTournament(t)}
+                                  style={mutedButton({
+                                    padding: "8px 10px",
+                                    width: isMobile ? "100%" : "auto",
+                                  })}
+                                >
+                                  Bearbeiten
+                                </button>
+                                <button
+                                  onClick={() => deleteTournament(t.id)}
+                                  style={dangerButton({
+                                    padding: "8px 10px",
+                                    width: isMobile ? "100%" : "auto",
+                                  })}
+                                >
+                                  Löschen
+                                </button>
+                              </div>
+                            </div>
+
+                            <div style={detailBoxStyle()}>
+                              <div style={detailRowStyle(isMobile)}>
+                                <div style={detailLabelStyle(isMobile)}>Datum:</div>
+                                <div style={detailValueStyle()}>{formatDate(t.date)}</div>
+                              </div>
+                              <div style={detailRowStyle(isMobile)}>
+                                <div style={detailLabelStyle(isMobile)}>Meldung:</div>
+                                <div style={detailValueStyle()}>{t.registration_time || "-"}</div>
+                              </div>
+                              <div style={detailRowStyle(isMobile)}>
+                                <div style={detailLabelStyle(isMobile)}>Beginn:</div>
+                                <div style={detailValueStyle()}>{t.start_time || "-"}</div>
+                              </div>
+                              <div style={detailRowStyle(isMobile)}>
+                                <div style={detailLabelStyle(isMobile)}>Ort:</div>
+                                <div style={detailValueStyle()}>{t.location || "-"}</div>
+                              </div>
+                              <div style={detailRowStyle(isMobile)}>
+                                <div style={detailLabelStyle(isMobile)}>Mannschaft:</div>
+                                <div style={detailValueStyle()}>{t.team_name || "-"}</div>
+                              </div>
+                              <div style={detailRowStyle(isMobile)}>
+                                <div style={detailLabelStyle(isMobile)}>Turnierart:</div>
+                                <div style={detailValueStyle()}>{t.tournamentType || "-"}</div>
+                              </div>
+                              <div style={detailRowStyle(isMobile)}>
+                                <div style={detailLabelStyle(isMobile)}>Pässe:</div>
+                                <div style={detailValueStyle()}>{t.has_passes || "-"}</div>
+                              </div>
+                              <div style={{ ...detailRowStyle(isMobile), borderBottom: "none" }}>
+                                <div style={detailLabelStyle(isMobile)}>Bemerkung:</div>
+                                <div style={detailValueStyle()}>{t.notes || "-"}</div>
+                              </div>
+                            </div>
+
+                            <div style={{ marginTop: 12, minWidth: 0 }}>
+                              <div
+                                style={{
+                                  fontWeight: 700,
+                                  marginBottom: 8,
+                                  color: COLORS.blue,
+                                }}
+                              >
+                                Teilnehmer
+                              </div>
+
+                              {tournamentEntries.length > 0 ? (
+                                <div style={{ ...tableWrapStyle(), overflowX: "auto" }}>
+                                  <div style={{ minWidth: 520 }}>
+                                    <div
+                                      style={tableHeaderStyle(
+                                        "minmax(220px, 1.6fr) minmax(140px, 1fr) minmax(120px, 0.9fr)"
+                                      )}
+                                    >
+                                      <div>Name</div>
+                                      <div>Passnummer</div>
+                                      <div>Status</div>
+                                    </div>
+
+                                    <div style={{ display: "grid" }}>
+                                      {tournamentEntries.map((e, index) => (
+                                        <div
+                                          key={e.id}
+                                          style={tableRowStyle(
+                                            "minmax(220px, 1.6fr) minmax(140px, 1fr) minmax(120px, 0.9fr)",
+                                            index % 2 === 1,
+                                            index === tournamentEntries.length - 1
+                                          )}
+                                        >
+                                          <div style={{ fontWeight: 700, color: COLORS.text }}>
+                                            {e.player_name}
+                                          </div>
+                                          <div>{getPassNumberByPlayerName(e.player_name)}</div>
+                                          <div>
+                                            <span style={statusBadgeStyle(e.status)}>
+                                              {e.status}
+                                            </span>
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </div>
+                              ) : (
+                                <div style={{ color: COLORS.muted }}>
+                                  Noch keine Teilnehmer vorhanden.
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+
+                      {tournaments.length === 0 ? (
+                        <div style={{ color: COLORS.muted }}>
+                          Noch keine Turniere angelegt.
+                        </div>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+
+              {adminTab === "spieler" ? (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 18,
+                    alignItems: "stretch",
+                    width: "100%",
+                    maxWidth: "100%",
+                    overflowX: "hidden",
+                    minWidth: 0,
+                  }}
+                >
+                  <div
+                    style={{
+                      background: COLORS.soft,
+                      border: `1px solid ${COLORS.line}`,
+                      borderRadius: 14,
+                      padding: 14,
+                      width: "100%",
+                      maxWidth: "100%",
+                      minWidth: 0,
+                      boxSizing: "border-box",
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: 18,
+                        fontWeight: 800,
+                        marginBottom: 12,
+                        color: COLORS.blue,
+                      }}
+                    >
+                      {editingPlayerId ? "Spieler bearbeiten" : "Spieler anlegen"}
+                    </div>
+
+                    <div style={{ display: "grid", gap: 10, width: "100%", minWidth: 0 }}>
+                      <input
+                        placeholder="Name"
+                        value={playerName}
+                        onChange={(e) => setPlayerName(e.target.value)}
+                        style={inputStyle()}
+                      />
+
+                      <input
+                        placeholder="Passnummer"
+                        value={playerPassNumber}
+                        onChange={(e) => setPlayerPassNumber(e.target.value)}
+                        style={inputStyle({ background: "#eef6ff" })}
+                      />
+
+                      <select
+                        value={playerRole}
+                        onChange={(e) => setPlayerRole(e.target.value)}
+                        style={selectStyle()}
+                      >
+                        <option value="Spieler">Spieler</option>
+                        <option value="Spielerin">Spielerin</option>
+                        <option value="Admin">Admin</option>
+                      </select>
+
+                      <input
+                        type="password"
+                        placeholder="Passwort"
+                        value={playerPassword}
+                        onChange={(e) => setPlayerPassword(e.target.value)}
+                        style={inputStyle()}
+                      />
+
+                      <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                        <button
+                          onClick={savePlayer}
+                          style={successButton({ width: isMobile ? "100%" : "auto" })}
+                        >
+                          {editingPlayerId ? "Änderungen speichern" : "Spieler speichern"}
+                        </button>
+                        <button
+                          onClick={resetPlayerForm}
+                          style={mutedButton({ width: isMobile ? "100%" : "auto" })}
+                        >
+                          Zurücksetzen
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    style={{
+                      background: COLORS.white,
+                      border: `1px solid ${COLORS.line}`,
+                      borderRadius: 14,
+                      padding: 14,
+                      width: "100%",
+                      maxWidth: "100%",
+                      minWidth: 0,
+                      boxSizing: "border-box",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        gap: 12,
+                        flexWrap: "wrap",
+                        alignItems: "center",
+                        marginBottom: 12,
+                        minWidth: 0,
+                      }}
+                    >
+                      <div style={{ fontSize: 16, fontWeight: 800, color: COLORS.blue }}>
+                        Spielerliste
+                      </div>
+
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: 10,
+                          flexWrap: "wrap",
+                          width: isMobile ? "100%" : "auto",
+                          minWidth: 0,
+                        }}
+                      >
+                        <input
+                          placeholder="Suche nach Name, Passnummer oder Rolle"
+                          value={playerSearch}
+                          onChange={(e) => setPlayerSearch(e.target.value)}
+                          style={inputStyle({
+                            width: isMobile ? "100%" : 280,
+                            background: "#fff",
+                            flex: isMobile ? "1 1 100%" : undefined,
+                          })}
+                        />
+
+                        <select
+                          value={playerSort}
+                          onChange={(e) =>
+                            setPlayerSort(
+                              e.target.value as
+                                | "name_asc"
+                                | "name_desc"
+                                | "pass_asc"
+                                | "pass_desc"
+                            )
+                          }
+                          style={selectStyle({
+                            width: isMobile ? "100%" : 200,
+                            background: "#fff",
+                          })}
+                        >
+                          <option value="name_asc">Name A-Z</option>
+                          <option value="name_desc">Name Z-A</option>
+                          <option value="pass_asc">Passnummer aufsteigend</option>
+                          <option value="pass_desc">Passnummer absteigend</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div style={{ marginBottom: 12, color: COLORS.muted, fontSize: 13 }}>
+                      Gefundene Spieler: {filteredAndSortedPlayers.length}
+                    </div>
+
+                    <div style={{ ...tableWrapStyle(), overflowX: "auto" }}>
+                      <table
+                        style={{
+                          width: "100%",
+                          minWidth: 560,
+                          borderCollapse: "collapse",
+                          tableLayout: "fixed",
+                          background: COLORS.white,
+                        }}
+                      >
+                        <colgroup>
+                          <col style={{ width: "40%" }} />
+                          <col style={{ width: "28%" }} />
+                          <col style={{ width: "32%" }} />
+                        </colgroup>
+
+                        <thead>
+                          <tr style={{ background: COLORS.blue }}>
+                            <th
+                              style={{
+                                padding: "14px",
+                                color: COLORS.white,
+                                fontWeight: 800,
+                                textAlign: "left",
+                                fontSize: 16,
+                              }}
+                            >
+                              Name
+                            </th>
+                            <th
+                              style={{
+                                padding: "14px",
+                                color: COLORS.white,
+                                fontWeight: 800,
+                                textAlign: "left",
+                                fontSize: 16,
+                              }}
+                            >
+                              Passnummer
+                            </th>
+                            <th
+                              style={{
+                                padding: "14px",
+                                color: COLORS.white,
+                                fontWeight: 800,
+                                textAlign: "left",
+                                fontSize: 16,
+                              }}
+                            >
+                              Aktionen
+                            </th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          {filteredAndSortedPlayers.map((p, index) => (
+                            <tr
+                              key={p.id}
+                              style={{
+                                background: index % 2 === 1 ? "#f8fafc" : COLORS.white,
+                                borderBottom:
+                                  index === filteredAndSortedPlayers.length - 1
+                                    ? "none"
+                                    : `1px solid ${COLORS.line}`,
+                              }}
+                            >
+                              <td
+                                style={{
+                                  padding: "8px 12px",
+                                  textAlign: "left",
+                                  fontWeight: 700,
+                                  color: COLORS.text,
+                                  wordBreak: "break-word",
+                                  verticalAlign: "middle",
+                                }}
+                              >
+                                {p.name}
+                              </td>
+
+                              <td
+                                style={{
+                                  padding: "8px 12px",
+                                  textAlign: "left",
+                                  fontWeight: 700,
+                                  color: COLORS.blueSoft,
+                                  verticalAlign: "middle",
+                                }}
+                              >
+                                {p.pass_number || "-"}
+                              </td>
+
+                              <td
+                                style={{
+                                  padding: "8px 12px",
+                                  textAlign: "left",
+                                  verticalAlign: "middle",
+                                }}
+                              >
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    gap: 6,
+                                    flexWrap: isMobile ? "wrap" : "nowrap",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <button
+                                    onClick={() => editPlayer(p)}
+                                    style={mutedButton({
+                                      padding: "6px 10px",
+                                      fontSize: 13,
+                                      width: isMobile ? "100%" : "auto",
+                                    })}
+                                  >
+                                    Bearbeiten
+                                  </button>
+                                  <button
+                                    onClick={() => deletePlayer(p.id, p.name)}
+                                    style={dangerButton({
+                                      padding: "6px 10px",
+                                      fontSize: 13,
+                                      width: isMobile ? "100%" : "auto",
+                                    })}
+                                  >
+                                    Löschen
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+
+                          {filteredAndSortedPlayers.length === 0 ? (
+                            <tr>
+                              <td
+                                colSpan={3}
+                                style={{ padding: 14, color: COLORS.muted, textAlign: "left" }}
+                              >
+                                Keine Spieler zur Suche gefunden.
+                              </td>
+                            </tr>
+                          ) : null}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+
+              {adminTab === "einstellungen" ? (
+                <div
+                  style={{
+                    background: COLORS.soft,
+                    border: `1px solid ${COLORS.line}`,
+                    borderRadius: 14,
+                    padding: 14,
+                    display: "grid",
+                    gap: 10,
+                    maxWidth: "100%",
+                    minWidth: 0,
+                    boxSizing: "border-box",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: 18,
+                      fontWeight: 800,
+                      marginBottom: 4,
+                      color: COLORS.blue,
+                    }}
+                  >
+                    Einstellungen
+                  </div>
+
+                  <input
+                    placeholder="Überschrift"
+                    value={titleInput}
+                    onChange={(e) => setTitleInput(e.target.value)}
+                    style={inputStyle()}
+                  />
+
+                  <button
+                    onClick={saveSettings}
+                    style={successButton({ width: isMobile ? "100%" : "auto" })}
+                  >
+                    Überschrift speichern
+                  </button>
+
+                  <div
+                    style={{
+                      padding: 12,
+                      borderRadius: 10,
+                      background: "#fff",
+                      border: `1px solid ${COLORS.line}`,
+                      color: COLORS.muted,
+                      lineHeight: 1.5,
+                      wordBreak: "break-word",
+                    }}
+                  >
+                    Das Vereinslogo wird jetzt fest über eine öffentliche URL geladen.
+                    Änderungen am Logo bitte direkt oben im Code bei
+                    <strong> CLUB_LOGO_PUBLIC_URL </strong>
+                    vornehmen.
+                  </div>
+
+                  {clubLogo ? (
+                    <div style={{ marginTop: 6 }}>
+                      <img
+                        src={clubLogo}
+                        alt="Vereinslogo"
+                        style={{
+                          width: 90,
+                          height: 90,
+                          objectFit: "cover",
+                          borderRadius: 14,
+                          border: `2px solid ${COLORS.red}`,
+                        }}
+                      />
+                    </div>
+                  ) : null}
+                </div>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={shellStyle(isMobile)}>
+      <div style={pageInnerStyle(isMobile)}>
         <div
           style={{
             display: "flex",
@@ -962,1058 +1869,189 @@ export default function App() {
           </div>
         </div>
 
-        <div style={{ ...cardStyle(), padding: 0, overflow: "hidden" }}>
-          <div
-            style={{
-              background: COLORS.blue,
-              padding: isMobile ? "14px" : "14px 16px",
-              borderBottom: `1px solid ${COLORS.blue}`,
-            }}
-          >
-            <div style={{ fontSize: isMobile ? 18 : 20, fontWeight: 800, color: COLORS.white }}>
-              Admin-Bereich
-            </div>
-            <div style={{ fontSize: 13, color: "#d7e4ef", marginTop: 4 }}>
-              Verwaltung von Turnieren, Spielern und Einstellungen
-            </div>
-          </div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: isMobile ? "1fr" : "320px minmax(0,1fr)",
+            gap: 20,
+            alignItems: "start",
+            width: "100%",
+            minWidth: 0,
+          }}
+        >
+          <div style={cardStyle()}>
+            <div style={sectionTitleStyle()}>Turniere</div>
 
-          <div
-            style={{
-              display: "flex",
-              gap: 10,
-              padding: isMobile ? 12 : 16,
-              flexWrap: "wrap",
-              borderBottom: `1px solid ${COLORS.line}`,
-              background: "#f7fafc",
-              width: "100%",
-              boxSizing: "border-box",
-            }}
-          >
-            <button
-              onClick={() => setAdminTab("turniere")}
-              style={adminTab === "turniere" ? primaryButton() : mutedButton()}
-            >
-              Turniere
-            </button>
-
-            <button
-              onClick={() => setAdminTab("spieler")}
-              style={adminTab === "spieler" ? primaryButton() : mutedButton()}
-            >
-              Spieler
-            </button>
-
-            <button
-              onClick={() => setAdminTab("einstellungen")}
-              style={adminTab === "einstellungen" ? primaryButton() : mutedButton()}
-            >
-              Einstellungen
-            </button>
-          </div>
-
-          <div
-            style={{
-              padding: isMobile ? 12 : 16,
-              width: "100%",
-              boxSizing: "border-box",
-              minWidth: 0,
-            }}
-          >
-            {adminTab === "turniere" ? (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 18,
-                  alignItems: "stretch",
-                  width: "100%",
-                  maxWidth: "100%",
-                  overflowX: "hidden",
-                  minWidth: 0,
-                }}
-              >
+            <div style={{ display: "grid", gap: 8, minWidth: 0 }}>
+              {tournaments.map((t) => (
                 <div
-                  style={{
-                    background: COLORS.soft,
-                    border: `1px solid ${COLORS.line}`,
-                    borderRadius: 14,
-                    padding: 14,
-                    width: "100%",
-                    maxWidth: "100%",
-                    minWidth: 0,
-                    boxSizing: "border-box",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: 18,
-                      fontWeight: 800,
-                      marginBottom: 12,
-                      color: COLORS.blue,
-                    }}
-                  >
-                    {editingTournamentId ? "Turnier bearbeiten" : "Turnier anlegen"}
-                  </div>
-
-                  <div style={{ display: "grid", gap: 10, width: "100%", minWidth: 0 }}>
-                    <input
-                      placeholder="Turniername"
-                      value={tournamentTitle}
-                      onChange={(e) => setTournamentTitle(e.target.value)}
-                      style={inputStyle()}
-                    />
-
-                    <input
-                      type="date"
-                      value={tournamentDate}
-                      onChange={(e) => setTournamentDate(e.target.value)}
-                      style={inputStyle()}
-                    />
-
-                    <select
-                      value={registrationTime}
-                      onChange={(e) => setRegistrationTime(e.target.value)}
-                      style={selectStyle()}
-                    >
-                      <option value="">Meldung auswählen</option>
-                      {timeOptions.map((time) => (
-                        <option key={`reg-${time}`} value={time}>
-                          {time}
-                        </option>
-                      ))}
-                    </select>
-
-                    <select
-                      value={startTime}
-                      onChange={(e) => setStartTime(e.target.value)}
-                      style={selectStyle()}
-                    >
-                      <option value="">Beginn auswählen</option>
-                      {timeOptions.map((time) => (
-                        <option key={`start-${time}`} value={time}>
-                          {time}
-                        </option>
-                      ))}
-                    </select>
-
-                    <input
-                      placeholder="Ort"
-                      value={location}
-                      onChange={(e) => setLocation(e.target.value)}
-                      style={inputStyle()}
-                    />
-
-                    <select
-                      value={teamName}
-                      onChange={(e) => setTeamName(e.target.value)}
-                      style={selectStyle()}
-                    >
-                      {teamOptions.map((team) => (
-                        <option key={team} value={team}>
-                          {team}
-                        </option>
-                      ))}
-                    </select>
-
-                    <select
-                      value={tournamentType}
-                      onChange={(e) => setTournamentType(e.target.value)}
-                      style={selectStyle()}
-                    >
-                      <option value="Freies-Turnier">Freies-Turnier</option>
-                      <option value="Herren-Turnier">Herren-Turnier</option>
-                      <option value="Damen-Turnier">Damen-Turnier</option>
-                      <option value="Ü50-Turnier">Ü50-Turnier</option>
-                    </select>
-
-                    <select
-                      value={hasPasses}
-                      onChange={(e) => setHasPasses(e.target.value)}
-                      style={selectStyle()}
-                    >
-                      <option value="ja">ja</option>
-                      <option value="nein">nein</option>
-                    </select>
-
-                    <textarea
-                      placeholder="Bemerkung"
-                      value={notes}
-                      onChange={(e) => setNotes(e.target.value)}
-                      style={{ ...inputStyle(), minHeight: 90, resize: "vertical" }}
-                    />
-
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: 10,
-                        flexWrap: "wrap",
-                        width: "100%",
-                      }}
-                    >
-                      <button
-                        onClick={saveTournament}
-                        style={successButton({ width: isMobile ? "100%" : "auto" })}
-                      >
-                        {editingTournamentId ? "Änderungen speichern" : "Turnier speichern"}
-                      </button>
-                      <button
-                        onClick={resetTournamentForm}
-                        style={mutedButton({ width: isMobile ? "100%" : "auto" })}
-                      >
-                        Zurücksetzen
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div
-                  style={{
-                    background: COLORS.white,
-                    border: `1px solid ${COLORS.line}`,
-                    borderRadius: 14,
-                    padding: 14,
-                    width: "100%",
-                    maxWidth: "100%",
-                    minWidth: 0,
-                    boxSizing: "border-box",
-                  }}
-                >
-                  <div style={{ fontSize: 16, fontWeight: 800, marginBottom: 10, color: COLORS.blue }}>
-                    Gemeldete Turniere
-                  </div>
-
-                  <div style={{ display: "grid", gap: 10, width: "100%", minWidth: 0 }}>
-                    {tournaments.map((t) => {
-                      const tournamentEntries = entries
-                        .filter((e) => String(e.tournament_id) === String(t.id))
-                        .sort((a, b) => a.player_name.localeCompare(b.player_name, "de"));
-
-                      return (
-                        <div
-                          key={t.id}
-                          style={{
-                            padding: 14,
-                            borderRadius: 12,
-                            background: COLORS.soft,
-                            border: `1px solid ${COLORS.line}`,
-                            width: "100%",
-                            maxWidth: "100%",
-                            minWidth: 0,
-                            boxSizing: "border-box",
-                          }}
-                        >
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              gap: 10,
-                              alignItems: "flex-start",
-                              flexWrap: "wrap",
-                              marginBottom: 12,
-                              minWidth: 0,
-                            }}
-                          >
-                            <div style={{ minWidth: 0, flex: 1 }}>
-                              <div
-                                style={{
-                                  fontWeight: 800,
-                                  fontSize: 17,
-                                  color: COLORS.blue,
-                                  wordBreak: "break-word",
-                                  overflowWrap: "anywhere",
-                                }}
-                              >
-                                {t.title}
-                              </div>
-                            </div>
-
-                            <div
-                              style={{
-                                display: "flex",
-                                gap: 6,
-                                flexWrap: "wrap",
-                                width: isMobile ? "100%" : "auto",
-                              }}
-                            >
-                              <button
-                                onClick={() => editTournament(t)}
-                                style={mutedButton({
-                                  padding: "8px 10px",
-                                  width: isMobile ? "100%" : "auto",
-                                })}
-                              >
-                                Bearbeiten
-                              </button>
-                              <button
-                                onClick={() => deleteTournament(t.id)}
-                                style={dangerButton({
-                                  padding: "8px 10px",
-                                  width: isMobile ? "100%" : "auto",
-                                })}
-                              >
-                                Löschen
-                              </button>
-                            </div>
-                          </div>
-
-                          <div style={detailBoxStyle()}>
-                            <div style={detailRowStyle(isMobile)}>
-                              <div style={detailLabelStyle(isMobile)}>Datum:</div>
-                              <div style={detailValueStyle()}>{formatDate(t.date)}</div>
-                            </div>
-                            <div style={detailRowStyle(isMobile)}>
-                              <div style={detailLabelStyle(isMobile)}>Meldung:</div>
-                              <div style={detailValueStyle()}>{t.registration_time || "-"}</div>
-                            </div>
-                            <div style={detailRowStyle(isMobile)}>
-                              <div style={detailLabelStyle(isMobile)}>Beginn:</div>
-                              <div style={detailValueStyle()}>{t.start_time || "-"}</div>
-                            </div>
-                            <div style={detailRowStyle(isMobile)}>
-                              <div style={detailLabelStyle(isMobile)}>Ort:</div>
-                              <div style={detailValueStyle()}>{t.location || "-"}</div>
-                            </div>
-                            <div style={detailRowStyle(isMobile)}>
-                              <div style={detailLabelStyle(isMobile)}>Mannschaft:</div>
-                              <div style={detailValueStyle()}>{t.team_name || "-"}</div>
-                            </div>
-                            <div style={detailRowStyle(isMobile)}>
-                              <div style={detailLabelStyle(isMobile)}>Turnierart:</div>
-                              <div style={detailValueStyle()}>{t.tournamentType || "-"}</div>
-                            </div>
-                            <div style={detailRowStyle(isMobile)}>
-                              <div style={detailLabelStyle(isMobile)}>Pässe:</div>
-                              <div style={detailValueStyle()}>{t.has_passes || "-"}</div>
-                            </div>
-                            <div style={{ ...detailRowStyle(isMobile), borderBottom: "none" }}>
-                              <div style={detailLabelStyle(isMobile)}>Bemerkung:</div>
-                              <div style={detailValueStyle()}>{t.notes || "-"}</div>
-                            </div>
-                          </div>
-
-                          <div style={{ marginTop: 12, minWidth: 0 }}>
-                            <div style={{ fontWeight: 700, marginBottom: 8, color: COLORS.blue }}>
-                              Teilnehmer
-                            </div>
-
-                            {tournamentEntries.length > 0 ? (
-                              <div style={{ ...tableWrapStyle(), overflowX: "auto" }}>
-                                <div style={{ minWidth: 520 }}>
-                                  <div
-                                    style={tableHeaderStyle(
-                                      "minmax(220px, 1.6fr) minmax(140px, 1fr) minmax(120px, 0.9fr)"
-                                    )}
-                                  >
-                                    <div>Name</div>
-                                    <div>Passnummer</div>
-                                    <div>Status</div>
-                                  </div>
-
-                                  <div style={{ display: "grid" }}>
-                                    {tournamentEntries.map((e, index) => (
-                                      <div
-                                        key={e.id}
-                                        style={tableRowStyle(
-                                          "minmax(220px, 1.6fr) minmax(140px, 1fr) minmax(120px, 0.9fr)",
-                                          index % 2 === 1,
-                                          index === tournamentEntries.length - 1
-                                        )}
-                                      >
-                                        <div style={{ fontWeight: 700, color: COLORS.text }}>
-                                          {e.player_name}
-                                        </div>
-                                        <div>{getPassNumberByPlayerName(e.player_name)}</div>
-                                        <div>
-                                          <span style={statusBadgeStyle(e.status)}>{e.status}</span>
-                                        </div>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-                              </div>
-                            ) : (
-                              <div style={{ color: COLORS.muted }}>
-                                Noch keine Teilnehmer vorhanden.
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
-
-                    {tournaments.length === 0 ? (
-                      <div style={{ color: COLORS.muted }}>Noch keine Turniere angelegt.</div>
-                    ) : null}
-                  </div>
-                </div>
-              </div>
-            ) : null}
-
-            {adminTab === "spieler" ? (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 18,
-                  alignItems: "stretch",
-                  width: "100%",
-                  maxWidth: "100%",
-                  overflowX: "hidden",
-                  minWidth: 0,
-                }}
-              >
-                <div
-                  style={{
-                    background: COLORS.soft,
-                    border: `1px solid ${COLORS.line}`,
-                    borderRadius: 14,
-                    padding: 14,
-                    width: "100%",
-                    maxWidth: "100%",
-                    minWidth: 0,
-                    boxSizing: "border-box",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: 18,
-                      fontWeight: 800,
-                      marginBottom: 12,
-                      color: COLORS.blue,
-                    }}
-                  >
-                    {editingPlayerId ? "Spieler bearbeiten" : "Spieler anlegen"}
-                  </div>
-
-                  <div style={{ display: "grid", gap: 10, width: "100%", minWidth: 0 }}>
-                    <input
-                      placeholder="Name"
-                      value={playerName}
-                      onChange={(e) => setPlayerName(e.target.value)}
-                      style={inputStyle()}
-                    />
-
-                    <input
-                      placeholder="Passnummer"
-                      value={playerPassNumber}
-                      onChange={(e) => setPlayerPassNumber(e.target.value)}
-                      style={inputStyle({ background: "#eef6ff" })}
-                    />
-
-                    <select
-                      value={playerRole}
-                      onChange={(e) => setPlayerRole(e.target.value)}
-                      style={selectStyle()}
-                    >
-                      <option value="Spieler">Spieler</option>
-                      <option value="Spielerin">Spielerin</option>
-                      <option value="Admin">Admin</option>
-                    </select>
-
-                    <input
-                      type="password"
-                      placeholder="Passwort"
-                      value={playerPassword}
-                      onChange={(e) => setPlayerPassword(e.target.value)}
-                      style={inputStyle()}
-                    />
-
-                    <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                      <button
-                        onClick={savePlayer}
-                        style={successButton({ width: isMobile ? "100%" : "auto" })}
-                      >
-                        {editingPlayerId ? "Änderungen speichern" : "Spieler speichern"}
-                      </button>
-                      <button
-                        onClick={resetPlayerForm}
-                        style={mutedButton({ width: isMobile ? "100%" : "auto" })}
-                      >
-                        Zurücksetzen
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div
-                  style={{
-                    background: COLORS.white,
-                    border: `1px solid ${COLORS.line}`,
-                    borderRadius: 14,
-                    padding: 14,
-                    width: "100%",
-                    maxWidth: "100%",
-                    minWidth: 0,
-                    boxSizing: "border-box",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      gap: 12,
-                      flexWrap: "wrap",
-                      alignItems: "center",
-                      marginBottom: 12,
-                      minWidth: 0,
-                    }}
-                  >
-                    <div style={{ fontSize: 16, fontWeight: 800, color: COLORS.blue }}>
-                      Spielerliste
-                    </div>
-
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: 10,
-                        flexWrap: "wrap",
-                        width: isMobile ? "100%" : "auto",
-                        minWidth: 0,
-                      }}
-                    >
-                      <input
-                        placeholder="Suche nach Name, Passnummer oder Rolle"
-                        value={playerSearch}
-                        onChange={(e) => setPlayerSearch(e.target.value)}
-                        style={inputStyle({
-                          width: isMobile ? "100%" : 280,
-                          background: "#fff",
-                          flex: isMobile ? "1 1 100%" : undefined,
-                        })}
-                      />
-
-                      <select
-                        value={playerSort}
-                        onChange={(e) =>
-                          setPlayerSort(
-                            e.target.value as
-                              | "name_asc"
-                              | "name_desc"
-                              | "pass_asc"
-                              | "pass_desc"
-                          )
-                        }
-                        style={selectStyle({
-                          width: isMobile ? "100%" : 200,
-                          background: "#fff",
-                        })}
-                      >
-                        <option value="name_asc">Name A-Z</option>
-                        <option value="name_desc">Name Z-A</option>
-                        <option value="pass_asc">Passnummer aufsteigend</option>
-                        <option value="pass_desc">Passnummer absteigend</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div style={{ marginBottom: 12, color: COLORS.muted, fontSize: 13 }}>
-                    Gefundene Spieler: {filteredAndSortedPlayers.length}
-                  </div>
-
-                  <div style={{ ...tableWrapStyle(), overflowX: "auto" }}>
-                    <table
-                      style={{
-                        width: "100%",
-                        minWidth: 560,
-                        borderCollapse: "collapse",
-                        tableLayout: "fixed",
-                        background: COLORS.white,
-                      }}
-                    >
-                      <colgroup>
-                        <col style={{ width: "40%" }} />
-                        <col style={{ width: "28%" }} />
-                        <col style={{ width: "32%" }} />
-                      </colgroup>
-
-                      <thead>
-                        <tr style={{ background: COLORS.blue }}>
-                          <th
-                            style={{
-                              padding: "14px",
-                              color: COLORS.white,
-                              fontWeight: 800,
-                              textAlign: "left",
-                              fontSize: 16,
-                            }}
-                          >
-                            Name
-                          </th>
-                          <th
-                            style={{
-                              padding: "14px",
-                              color: COLORS.white,
-                              fontWeight: 800,
-                              textAlign: "left",
-                              fontSize: 16,
-                            }}
-                          >
-                            Passnummer
-                          </th>
-                          <th
-                            style={{
-                              padding: "14px",
-                              color: COLORS.white,
-                              fontWeight: 800,
-                              textAlign: "left",
-                              fontSize: 16,
-                            }}
-                          >
-                            Aktionen
-                          </th>
-                        </tr>
-                      </thead>
-
-                      <tbody>
-                        {filteredAndSortedPlayers.map((p, index) => (
-                          <tr
-                            key={p.id}
-                            style={{
-                              background: index % 2 === 1 ? "#f8fafc" : COLORS.white,
-                              borderBottom:
-                                index === filteredAndSortedPlayers.length - 1
-                                  ? "none"
-                                  : `1px solid ${COLORS.line}`,
-                            }}
-                          >
-                            <td
-                              style={{
-                                padding: "8px 12px",
-                                textAlign: "left",
-                                fontWeight: 700,
-                                color: COLORS.text,
-                                wordBreak: "break-word",
-                                verticalAlign: "middle",
-                              }}
-                            >
-                              {p.name}
-                            </td>
-
-                            <td
-                              style={{
-                                padding: "8px 12px",
-                                textAlign: "left",
-                                fontWeight: 700,
-                                color: COLORS.blueSoft,
-                                verticalAlign: "middle",
-                              }}
-                            >
-                              {p.pass_number || "-"}
-                            </td>
-
-                            <td
-                              style={{
-                                padding: "8px 12px",
-                                textAlign: "left",
-                                verticalAlign: "middle",
-                              }}
-                            >
-                              <div
-                                style={{
-                                  display: "flex",
-                                  gap: 6,
-                                  flexWrap: isMobile ? "wrap" : "nowrap",
-                                  alignItems: "center",
-                                }}
-                              >
-                                <button
-                                  onClick={() => editPlayer(p)}
-                                  style={mutedButton({
-                                    padding: "6px 10px",
-                                    fontSize: 13,
-                                    width: isMobile ? "100%" : "auto",
-                                  })}
-                                >
-                                  Bearbeiten
-                                </button>
-                                <button
-                                  onClick={() => deletePlayer(p.id, p.name)}
-                                  style={dangerButton({
-                                    padding: "6px 10px",
-                                    fontSize: 13,
-                                    width: isMobile ? "100%" : "auto",
-                                  })}
-                                >
-                                  Löschen
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-
-                        {filteredAndSortedPlayers.length === 0 ? (
-                          <tr>
-                            <td
-                              colSpan={3}
-                              style={{ padding: 14, color: COLORS.muted, textAlign: "left" }}
-                            >
-                              Keine Spieler zur Suche gefunden.
-                            </td>
-                          </tr>
-                        ) : null}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            ) : null}
-
-            {adminTab === "einstellungen" ? (
-              <div
-                style={{
-                  background: COLORS.soft,
-                  border: `1px solid ${COLORS.line}`,
-                  borderRadius: 14,
-                  padding: 14,
-                  display: "grid",
-                  gap: 10,
-                  maxWidth: "100%",
-                  minWidth: 0,
-                  boxSizing: "border-box",
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: 18,
-                    fontWeight: 800,
-                    marginBottom: 4,
-                    color: COLORS.blue,
-                  }}
-                >
-                  Einstellungen
-                </div>
-
-                <input
-                  placeholder="Überschrift"
-                  value={titleInput}
-                  onChange={(e) => setTitleInput(e.target.value)}
-                  style={inputStyle()}
-                />
-
-                <button
-                  onClick={saveSettings}
-                  style={successButton({ width: isMobile ? "100%" : "auto" })}
-                >
-                  Überschrift speichern
-                </button>
-
-                <div
+                  key={t.id}
+                  onClick={() => setActiveTournamentId(t.id)}
                   style={{
                     padding: 12,
-                    borderRadius: 10,
-                    background: "#fff",
-                    border: `1px solid ${COLORS.line}`,
-                    color: COLORS.muted,
-                    lineHeight: 1.5,
-                    wordBreak: "break-word",
+                    borderRadius: 12,
+                    background: activeTournamentId === t.id ? "#ffe7ea" : COLORS.soft,
+                    cursor: "pointer",
+                    border:
+                      activeTournamentId === t.id
+                        ? `1px solid ${COLORS.red}`
+                        : `1px solid ${COLORS.line}`,
+                    transition: "0.15s",
+                    minWidth: 0,
+                    boxSizing: "border-box",
                   }}
                 >
-                  Das Vereinslogo wird jetzt fest über eine öffentliche URL geladen.
-                  Änderungen am Logo bitte direkt oben im Code bei
-                  <strong> CLUB_LOGO_PUBLIC_URL </strong>
-                  vornehmen.
-                </div>
-
-                {clubLogo ? (
-                  <div style={{ marginTop: 6 }}>
-                    <img
-                      src={clubLogo}
-                      alt="Vereinslogo"
-                      style={{
-                        width: 90,
-                        height: 90,
-                        objectFit: "cover",
-                        borderRadius: 14,
-                        border: `2px solid ${COLORS.red}`,
-                      }}
-                    />
+                  <div
+                    style={{
+                      fontSize: 12,
+                      color: COLORS.muted,
+                      marginBottom: 4,
+                      fontWeight: 600,
+                      wordBreak: "break-word",
+                      overflowWrap: "anywhere",
+                    }}
+                  >
+                    {formatDate(t.date)}
                   </div>
-                ) : null}
-              </div>
-            ) : null}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div style={shellStyle(isMobile)}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: 16,
-          marginBottom: 20,
-          flexWrap: "wrap",
-          background: COLORS.white,
-          borderRadius: 18,
-          padding: isMobile ? 14 : "18px 20px",
-          boxShadow: "0 8px 22px rgba(2,43,69,0.08)",
-          border: `1px solid ${COLORS.line}`,
-          width: "100%",
-          minWidth: 0,
-          boxSizing: "border-box",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 14,
-            minWidth: 0,
-            flex: "1 1 auto",
-          }}
-        >
-          {clubLogo ? (
-            <img
-              src={clubLogo}
-              alt="Logo"
-              style={{
-                height: isMobile ? 54 : 64,
-                width: isMobile ? 54 : 64,
-                borderRadius: 12,
-                objectFit: "cover",
-                border: `2px solid ${COLORS.red}`,
-                flexShrink: 0,
-              }}
-            />
-          ) : null}
-
-          <div style={{ minWidth: 0 }}>
-            <h1
-              style={{
-                margin: 0,
-                fontSize: isMobile ? 20 : 30,
-                lineHeight: 1.15,
-                color: COLORS.blue,
-                wordBreak: "break-word",
-              }}
-            >
-              {appTitle}
-            </h1>
-          </div>
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            alignItems: isMobile ? "stretch" : "center",
-            gap: 12,
-            flexWrap: "wrap",
-            justifyContent: "flex-end",
-            width: isMobile ? "100%" : "auto",
-            minWidth: 0,
-          }}
-        >
-          <div
-            style={{
-              fontSize: 15,
-              color: COLORS.muted,
-              textAlign: isMobile ? "left" : "right",
-              lineHeight: 1.35,
-              minWidth: 0,
-              flex: isMobile ? "1 1 100%" : "0 1 auto",
-              wordBreak: "break-word",
-            }}
-          >
-            Angemeldet als <strong style={{ color: COLORS.blue }}>{currentUser.name}</strong>
-            {currentUser.role ? ` · ${currentUser.role}` : ""}
-          </div>
-
-          <button
-            onClick={logout}
-            style={dangerButton({ width: isMobile ? "100%" : "auto" })}
-          >
-            Abmelden
-          </button>
-        </div>
-      </div>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: isMobile ? "1fr" : "320px minmax(0,1fr)",
-          gap: 20,
-          alignItems: "start",
-          width: "100%",
-          minWidth: 0,
-        }}
-      >
-        <div style={cardStyle()}>
-          <div style={sectionTitleStyle()}>Turniere</div>
-
-          <div style={{ display: "grid", gap: 8, minWidth: 0 }}>
-            {tournaments.map((t) => (
-              <div
-                key={t.id}
-                onClick={() => setActiveTournamentId(t.id)}
-                style={{
-                  padding: 12,
-                  borderRadius: 12,
-                  background: activeTournamentId === t.id ? "#ffe7ea" : COLORS.soft,
-                  cursor: "pointer",
-                  border:
-                    activeTournamentId === t.id
-                      ? `1px solid ${COLORS.red}`
-                      : `1px solid ${COLORS.line}`,
-                  transition: "0.15s",
-                  minWidth: 0,
-                  boxSizing: "border-box",
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: 12,
-                    color: COLORS.muted,
-                    marginBottom: 4,
-                    fontWeight: 600,
-                    wordBreak: "break-word",
-                    overflowWrap: "anywhere",
-                  }}
-                >
-                  {formatDate(t.date)}
+                  <div
+                    style={{
+                      fontWeight: 700,
+                      color: activeTournamentId === t.id ? COLORS.redDark : COLORS.blue,
+                      wordBreak: "break-word",
+                      overflowWrap: "anywhere",
+                      whiteSpace: "normal",
+                    }}
+                  >
+                    {t.title}
+                  </div>
                 </div>
-                <div
+              ))}
+
+              {tournaments.length === 0 ? (
+                <div style={{ color: COLORS.muted }}>Noch keine Turniere vorhanden.</div>
+              ) : null}
+            </div>
+          </div>
+
+          <div style={{ ...cardStyle(), minWidth: 0 }}>
+            {activeTournament ? (
+              <>
+                <h2
                   style={{
-                    fontWeight: 700,
-                    color: activeTournamentId === t.id ? COLORS.redDark : COLORS.blue,
+                    marginTop: 0,
+                    marginBottom: 12,
+                    color: COLORS.blue,
                     wordBreak: "break-word",
                     overflowWrap: "anywhere",
                     whiteSpace: "normal",
                   }}
                 >
-                  {t.title}
-                </div>
-              </div>
-            ))}
+                  {activeTournament.title}
+                </h2>
 
-            {tournaments.length === 0 ? (
-              <div style={{ color: COLORS.muted }}>Noch keine Turniere vorhanden.</div>
-            ) : null}
-          </div>
-        </div>
-
-        <div style={{ ...cardStyle(), minWidth: 0 }}>
-          {activeTournament ? (
-            <>
-              <h2
-                style={{
-                  marginTop: 0,
-                  marginBottom: 12,
-                  color: COLORS.blue,
-                  wordBreak: "break-word",
-                  overflowWrap: "anywhere",
-                  whiteSpace: "normal",
-                }}
-              >
-                {activeTournament.title}
-              </h2>
-
-              <div style={detailBoxStyle()}>
-                <div style={detailRowStyle(isMobile)}>
-                  <div style={detailLabelStyle(isMobile)}>Datum:</div>
-                  <div style={detailValueStyle()}>{formatDate(activeTournament.date)}</div>
-                </div>
-                <div style={detailRowStyle(isMobile)}>
-                  <div style={detailLabelStyle(isMobile)}>Meldung:</div>
-                  <div style={detailValueStyle()}>{activeTournament.registration_time || "-"}</div>
-                </div>
-                <div style={detailRowStyle(isMobile)}>
-                  <div style={detailLabelStyle(isMobile)}>Beginn:</div>
-                  <div style={detailValueStyle()}>{activeTournament.start_time || "-"}</div>
-                </div>
-                <div style={detailRowStyle(isMobile)}>
-                  <div style={detailLabelStyle(isMobile)}>Ort:</div>
-                  <div style={detailValueStyle()}>{activeTournament.location || "-"}</div>
-                </div>
-                <div style={detailRowStyle(isMobile)}>
-                  <div style={detailLabelStyle(isMobile)}>Mannschaft:</div>
-                  <div style={detailValueStyle()}>{activeTournament.team_name || "-"}</div>
-                </div>
-                <div style={detailRowStyle(isMobile)}>
-                  <div style={detailLabelStyle(isMobile)}>Turnierart:</div>
-                  <div style={detailValueStyle()}>{activeTournament.tournamentType || "-"}</div>
-                </div>
-                <div style={detailRowStyle(isMobile)}>
-                  <div style={detailLabelStyle(isMobile)}>Pässe:</div>
-                  <div style={detailValueStyle()}>{activeTournament.has_passes || "-"}</div>
-                </div>
-                <div style={{ ...detailRowStyle(isMobile), borderBottom: "none" }}>
-                  <div style={detailLabelStyle(isMobile)}>Bemerkung:</div>
-                  <div style={detailValueStyle()}>{activeTournament.notes || "-"}</div>
-                </div>
-              </div>
-
-              <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 16 }}>
-                <button
-                  onClick={() => saveStatus("dabei")}
-                  style={successButton({ width: isMobile ? "100%" : "auto" })}
-                >
-                  Ich bin dabei
-                </button>
-                <button
-                  onClick={() => saveStatus("nicht dabei")}
-                  style={warnButton({ width: isMobile ? "100%" : "auto" })}
-                >
-                  Ich bin nicht dabei
-                </button>
-                <button
-                  onClick={deleteMyEntry}
-                  style={dangerButton({ width: isMobile ? "100%" : "auto" })}
-                >
-                  Meldung löschen
-                </button>
-              </div>
-
-              <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 10, color: COLORS.blue }}>
-                Teilnehmer
-              </div>
-
-              {activeEntries.length > 0 ? (
-                <div style={{ ...tableWrapStyle(), overflowX: "auto" }}>
-                  <div style={{ minWidth: 520 }}>
-                    <div
-                      style={tableHeaderStyle(
-                        "minmax(220px, 1.6fr) minmax(140px, 1fr) minmax(120px, 0.9fr)"
-                      )}
-                    >
-                      <div>Name</div>
-                      <div>Passnummer</div>
-                      <div>Status</div>
-                    </div>
-
-                    <div style={{ display: "grid" }}>
-                      {activeEntries.map((e, index) => (
-                        <div
-                          key={e.id}
-                          style={tableRowStyle(
-                            "minmax(220px, 1.6fr) minmax(140px, 1fr) minmax(120px, 0.9fr)",
-                            index % 2 === 1,
-                            index === activeEntries.length - 1
-                          )}
-                        >
-                          <div style={{ fontWeight: 700, color: COLORS.text }}>
-                            {e.player_name}
-                          </div>
-                          <div>{getPassNumberByPlayerName(e.player_name)}</div>
-                          <div>
-                            <span style={statusBadgeStyle(e.status)}>{e.status}</span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+                <div style={detailBoxStyle()}>
+                  <div style={detailRowStyle(isMobile)}>
+                    <div style={detailLabelStyle(isMobile)}>Datum:</div>
+                    <div style={detailValueStyle()}>{formatDate(activeTournament.date)}</div>
+                  </div>
+                  <div style={detailRowStyle(isMobile)}>
+                    <div style={detailLabelStyle(isMobile)}>Meldung:</div>
+                    <div style={detailValueStyle()}>{activeTournament.registration_time || "-"}</div>
+                  </div>
+                  <div style={detailRowStyle(isMobile)}>
+                    <div style={detailLabelStyle(isMobile)}>Beginn:</div>
+                    <div style={detailValueStyle()}>{activeTournament.start_time || "-"}</div>
+                  </div>
+                  <div style={detailRowStyle(isMobile)}>
+                    <div style={detailLabelStyle(isMobile)}>Ort:</div>
+                    <div style={detailValueStyle()}>{activeTournament.location || "-"}</div>
+                  </div>
+                  <div style={detailRowStyle(isMobile)}>
+                    <div style={detailLabelStyle(isMobile)}>Mannschaft:</div>
+                    <div style={detailValueStyle()}>{activeTournament.team_name || "-"}</div>
+                  </div>
+                  <div style={detailRowStyle(isMobile)}>
+                    <div style={detailLabelStyle(isMobile)}>Turnierart:</div>
+                    <div style={detailValueStyle()}>{activeTournament.tournamentType || "-"}</div>
+                  </div>
+                  <div style={detailRowStyle(isMobile)}>
+                    <div style={detailLabelStyle(isMobile)}>Pässe:</div>
+                    <div style={detailValueStyle()}>{activeTournament.has_passes || "-"}</div>
+                  </div>
+                  <div style={{ ...detailRowStyle(isMobile), borderBottom: "none" }}>
+                    <div style={detailLabelStyle(isMobile)}>Bemerkung:</div>
+                    <div style={detailValueStyle()}>{activeTournament.notes || "-"}</div>
                   </div>
                 </div>
-              ) : (
-                <div>Noch keine Teilnehmer vorhanden.</div>
-              )}
-            </>
-          ) : (
-            <div>Bitte ein Turnier auswählen.</div>
-          )}
+
+                <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 16 }}>
+                  <button
+                    onClick={() => saveStatus("dabei")}
+                    style={successButton({ width: isMobile ? "100%" : "auto" })}
+                  >
+                    Ich bin dabei
+                  </button>
+                  <button
+                    onClick={() => saveStatus("nicht dabei")}
+                    style={warnButton({ width: isMobile ? "100%" : "auto" })}
+                  >
+                    Ich bin nicht dabei
+                  </button>
+                  <button
+                    onClick={deleteMyEntry}
+                    style={dangerButton({ width: isMobile ? "100%" : "auto" })}
+                  >
+                    Meldung löschen
+                  </button>
+                </div>
+
+                <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 10, color: COLORS.blue }}>
+                  Teilnehmer
+                </div>
+
+                {activeEntries.length > 0 ? (
+                  <div style={{ ...tableWrapStyle(), overflowX: "auto" }}>
+                    <div style={{ minWidth: 520 }}>
+                      <div
+                        style={tableHeaderStyle(
+                          "minmax(220px, 1.6fr) minmax(140px, 1fr) minmax(120px, 0.9fr)"
+                        )}
+                      >
+                        <div>Name</div>
+                        <div>Passnummer</div>
+                        <div>Status</div>
+                      </div>
+
+                      <div style={{ display: "grid" }}>
+                        {activeEntries.map((e, index) => (
+                          <div
+                            key={e.id}
+                            style={tableRowStyle(
+                              "minmax(220px, 1.6fr) minmax(140px, 1fr) minmax(120px, 0.9fr)",
+                              index % 2 === 1,
+                              index === activeEntries.length - 1
+                            )}
+                          >
+                            <div style={{ fontWeight: 700, color: COLORS.text }}>
+                              {e.player_name}
+                            </div>
+                            <div>{getPassNumberByPlayerName(e.player_name)}</div>
+                            <div>
+                              <span style={statusBadgeStyle(e.status)}>{e.status}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div>Noch keine Teilnehmer vorhanden.</div>
+                )}
+              </>
+            ) : (
+              <div>Bitte ein Turnier auswählen.</div>
+            )}
+          </div>
         </div>
       </div>
     </div>
