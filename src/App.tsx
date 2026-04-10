@@ -87,14 +87,16 @@ function normalizePassNumber(value: string) {
   return value.trim();
 }
 
-function shellStyle(): React.CSSProperties {
+function shellStyle(isMobile: boolean): React.CSSProperties {
   return {
     minHeight: "100vh",
     background: `linear-gradient(180deg, ${COLORS.bg} 0%, #eef2f7 100%)`,
-    padding: 20,
+    padding: isMobile ? 12 : 20,
     fontFamily: "Arial, sans-serif",
     color: COLORS.text,
     boxSizing: "border-box",
+    overflowX: "hidden",
+    width: "100%",
   };
 }
 
@@ -105,18 +107,24 @@ function cardStyle(): React.CSSProperties {
     padding: 18,
     boxShadow: "0 10px 24px rgba(2,43,69,0.08)",
     border: `1px solid ${COLORS.line}`,
+    boxSizing: "border-box",
+    width: "100%",
+    maxWidth: "100%",
+    minWidth: 0,
   };
 }
 
 function inputStyle(extra: React.CSSProperties = {}): React.CSSProperties {
   return {
     width: "100%",
+    maxWidth: "100%",
     padding: 11,
     borderRadius: 10,
     border: `1px solid ${COLORS.line}`,
     boxSizing: "border-box",
     background: "#fffdf2",
     outline: "none",
+    minWidth: 0,
     ...extra,
   };
 }
@@ -134,6 +142,7 @@ function primaryButton(extra: React.CSSProperties = {}): React.CSSProperties {
     color: "white",
     fontWeight: 700,
     cursor: "pointer",
+    boxSizing: "border-box",
     ...extra,
   };
 }
@@ -186,6 +195,9 @@ function detailBoxStyle(): React.CSSProperties {
     borderRadius: 14,
     padding: 16,
     marginBottom: 18,
+    minWidth: 0,
+    width: "100%",
+    boxSizing: "border-box",
   };
 }
 
@@ -197,6 +209,7 @@ function detailRowStyle(isMobile: boolean): React.CSSProperties {
     alignItems: "start",
     padding: "7px 0",
     borderBottom: `1px solid ${COLORS.line}`,
+    minWidth: 0,
   };
 }
 
@@ -206,6 +219,7 @@ function detailLabelStyle(isMobile: boolean): React.CSSProperties {
     color: COLORS.blue,
     whiteSpace: isMobile ? "normal" : "nowrap",
     textAlign: "left",
+    minWidth: 0,
   };
 }
 
@@ -216,6 +230,7 @@ function detailValueStyle(): React.CSSProperties {
     wordBreak: "break-word",
     overflowWrap: "anywhere",
     textAlign: "left",
+    minWidth: 0,
   };
 }
 
@@ -239,6 +254,10 @@ function tableWrapStyle(): React.CSSProperties {
     borderRadius: 14,
     overflow: "hidden",
     background: COLORS.white,
+    minWidth: 0,
+    width: "100%",
+    maxWidth: "100%",
+    boxSizing: "border-box",
   };
 }
 
@@ -254,6 +273,8 @@ function tableHeaderStyle(columns: string): React.CSSProperties {
     fontWeight: 800,
     color: COLORS.white,
     textAlign: "left",
+    minWidth: 0,
+    boxSizing: "border-box",
   };
 }
 
@@ -271,6 +292,8 @@ function tableRowStyle(
     background: striped ? "#f8fafc" : COLORS.white,
     borderBottom: isLast ? "none" : `1px solid ${COLORS.line}`,
     textAlign: "left",
+    minWidth: 0,
+    boxSizing: "border-box",
   };
 }
 
@@ -708,12 +731,12 @@ export default function App() {
   }
 
   if (loading) {
-    return <div style={shellStyle()}>Daten werden geladen...</div>;
+    return <div style={shellStyle(isMobile)}>Daten werden geladen...</div>;
   }
 
   if (loadError) {
     return (
-      <div style={shellStyle()}>
+      <div style={shellStyle(isMobile)}>
         <div style={{ ...cardStyle(), maxWidth: 700, margin: "0 auto" }}>
           <h2 style={{ marginTop: 0, color: COLORS.red }}>Fehler beim Laden</h2>
           <div style={{ color: COLORS.redDark, marginBottom: 14 }}>{loadError}</div>
@@ -729,7 +752,7 @@ export default function App() {
     return (
       <div
         style={{
-          ...shellStyle(),
+          ...shellStyle(isMobile),
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -761,7 +784,7 @@ export default function App() {
           <h1
             style={{
               marginTop: 0,
-              fontSize: 38,
+              fontSize: isMobile ? 28 : 38,
               lineHeight: 1.15,
               color: COLORS.blue,
               wordBreak: "break-word",
@@ -824,7 +847,7 @@ export default function App() {
 
   if (isAdmin) {
     return (
-      <div style={shellStyle()}>
+      <div style={shellStyle(isMobile)}>
         <div
           style={{
             display: "flex",
@@ -835,22 +858,35 @@ export default function App() {
             flexWrap: "wrap",
             background: COLORS.white,
             borderRadius: 18,
-            padding: "18px 20px",
+            padding: isMobile ? 14 : "18px 20px",
             boxShadow: "0 8px 22px rgba(2,43,69,0.08)",
             border: `1px solid ${COLORS.line}`,
+            minWidth: 0,
+            width: "100%",
+            maxWidth: "100%",
+            boxSizing: "border-box",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 14, minWidth: 0 }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 14,
+              minWidth: 0,
+              flex: "1 1 auto",
+            }}
+          >
             {clubLogo ? (
               <img
                 src={clubLogo}
                 alt="Logo"
                 style={{
-                  height: 64,
-                  width: 64,
+                  height: isMobile ? 54 : 64,
+                  width: isMobile ? 54 : 64,
                   borderRadius: 12,
                   objectFit: "cover",
                   border: `2px solid ${COLORS.red}`,
+                  flexShrink: 0,
                 }}
               />
             ) : null}
@@ -859,7 +895,7 @@ export default function App() {
               <h1
                 style={{
                   margin: 0,
-                  fontSize: isMobile ? 24 : 30,
+                  fontSize: isMobile ? 20 : 30,
                   lineHeight: 1.15,
                   color: COLORS.blue,
                   wordBreak: "break-word",
@@ -873,40 +909,58 @@ export default function App() {
           <div
             style={{
               display: "flex",
-              alignItems: "center",
+              alignItems: isMobile ? "stretch" : "center",
               gap: 12,
               marginLeft: "auto",
               flexWrap: "wrap",
               justifyContent: "flex-end",
+              width: isMobile ? "100%" : "auto",
+              minWidth: 0,
             }}
           >
             <div
               style={{
                 fontSize: 15,
                 color: COLORS.muted,
-                textAlign: "right",
+                textAlign: isMobile ? "left" : "right",
                 lineHeight: 1.35,
+                minWidth: 0,
+                flex: isMobile ? "1 1 100%" : "0 1 auto",
+                wordBreak: "break-word",
               }}
             >
               Angemeldet als <strong style={{ color: COLORS.blue }}>{currentUser.name}</strong>
               {currentUser.role ? ` · ${currentUser.role}` : ""}
             </div>
 
-            <button onClick={logout} style={dangerButton()}>
+            <button
+              onClick={logout}
+              style={dangerButton({
+                width: isMobile ? "100%" : "auto",
+              })}
+            >
               Abmelden
             </button>
           </div>
         </div>
 
-        <div style={{ ...cardStyle(), padding: 0, overflow: "hidden" }}>
+        <div
+          style={{
+            ...cardStyle(),
+            padding: 0,
+            overflow: "hidden",
+            minWidth: 0,
+          }}
+        >
           <div
             style={{
               background: COLORS.blue,
-              padding: "14px 16px",
+              padding: isMobile ? "14px 14px" : "14px 16px",
               borderBottom: `1px solid ${COLORS.blue}`,
+              minWidth: 0,
             }}
           >
-            <div style={{ fontSize: 20, fontWeight: 800, color: COLORS.white }}>
+            <div style={{ fontSize: isMobile ? 18 : 20, fontWeight: 800, color: COLORS.white }}>
               Admin-Bereich
             </div>
             <div style={{ fontSize: 13, color: "#d7e4ef", marginTop: 4 }}>
@@ -918,10 +972,13 @@ export default function App() {
             style={{
               display: "flex",
               gap: 10,
-              padding: 16,
+              padding: isMobile ? 12 : 16,
               flexWrap: "wrap",
               borderBottom: `1px solid ${COLORS.line}`,
               background: "#f7fafc",
+              minWidth: 0,
+              width: "100%",
+              boxSizing: "border-box",
             }}
           >
             <button
@@ -946,14 +1003,23 @@ export default function App() {
             </button>
           </div>
 
-          <div style={{ padding: 16 }}>
+          <div
+            style={{
+              padding: isMobile ? 12 : 16,
+              minWidth: 0,
+              width: "100%",
+              boxSizing: "border-box",
+            }}
+          >
             {adminTab === "turniere" ? (
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: isMobile ? "1fr" : "360px 1fr",
+                  gridTemplateColumns: isMobile ? "1fr" : "360px minmax(0, 1fr)",
                   gap: 18,
                   alignItems: "start",
+                  minWidth: 0,
+                  width: "100%",
                 }}
               >
                 <div
@@ -962,6 +1028,10 @@ export default function App() {
                     border: `1px solid ${COLORS.line}`,
                     borderRadius: 14,
                     padding: 14,
+                    minWidth: 0,
+                    width: "100%",
+                    maxWidth: "100%",
+                    boxSizing: "border-box",
                   }}
                 >
                   <div
@@ -975,7 +1045,7 @@ export default function App() {
                     {editingTournamentId ? "Turnier bearbeiten" : "Turnier anlegen"}
                   </div>
 
-                  <div style={{ display: "grid", gap: 10 }}>
+                  <div style={{ display: "grid", gap: 10, minWidth: 0 }}>
                     <input
                       placeholder="Turniername"
                       value={tournamentTitle}
@@ -1059,14 +1129,27 @@ export default function App() {
                       placeholder="Bemerkung"
                       value={notes}
                       onChange={(e) => setNotes(e.target.value)}
-                      style={{ ...inputStyle(), minHeight: 90 }}
+                      style={{ ...inputStyle(), minHeight: 90, resize: "vertical" }}
                     />
 
-                    <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                      <button onClick={saveTournament} style={successButton()}>
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: 10,
+                        flexWrap: "wrap",
+                        minWidth: 0,
+                      }}
+                    >
+                      <button
+                        onClick={saveTournament}
+                        style={successButton({ width: isMobile ? "100%" : "auto" })}
+                      >
                         {editingTournamentId ? "Änderungen speichern" : "Turnier speichern"}
                       </button>
-                      <button onClick={resetTournamentForm} style={mutedButton()}>
+                      <button
+                        onClick={resetTournamentForm}
+                        style={mutedButton({ width: isMobile ? "100%" : "auto" })}
+                      >
                         Zurücksetzen
                       </button>
                     </div>
@@ -1079,13 +1162,17 @@ export default function App() {
                     border: `1px solid ${COLORS.line}`,
                     borderRadius: 14,
                     padding: 14,
+                    minWidth: 0,
+                    width: "100%",
+                    maxWidth: "100%",
+                    boxSizing: "border-box",
                   }}
                 >
                   <div style={{ fontSize: 16, fontWeight: 800, marginBottom: 10, color: COLORS.blue }}>
                     Gemeldete Turniere
                   </div>
 
-                  <div style={{ display: "grid", gap: 10 }}>
+                  <div style={{ display: "grid", gap: 10, minWidth: 0 }}>
                     {tournaments.map((t) => {
                       const tournamentEntries = entries
                         .filter((e) => String(e.tournament_id) === String(t.id))
@@ -1099,6 +1186,9 @@ export default function App() {
                             borderRadius: 12,
                             background: COLORS.soft,
                             border: `1px solid ${COLORS.line}`,
+                            minWidth: 0,
+                            width: "100%",
+                            boxSizing: "border-box",
                           }}
                         >
                           <div
@@ -1109,6 +1199,7 @@ export default function App() {
                               alignItems: "flex-start",
                               flexWrap: "wrap",
                               marginBottom: 12,
+                              minWidth: 0,
                             }}
                           >
                             <div style={{ minWidth: 0, flex: 1 }}>
@@ -1125,16 +1216,29 @@ export default function App() {
                               </div>
                             </div>
 
-                            <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                            <div
+                              style={{
+                                display: "flex",
+                                gap: 6,
+                                flexWrap: "wrap",
+                                width: isMobile ? "100%" : "auto",
+                              }}
+                            >
                               <button
                                 onClick={() => editTournament(t)}
-                                style={mutedButton({ padding: "8px 10px" })}
+                                style={mutedButton({
+                                  padding: "8px 10px",
+                                  width: isMobile ? "100%" : "auto",
+                                })}
                               >
                                 Bearbeiten
                               </button>
                               <button
                                 onClick={() => deleteTournament(t.id)}
-                                style={dangerButton({ padding: "8px 10px" })}
+                                style={dangerButton({
+                                  padding: "8px 10px",
+                                  width: isMobile ? "100%" : "auto",
+                                })}
                               >
                                 Löschen
                               </button>
@@ -1176,7 +1280,7 @@ export default function App() {
                             </div>
                           </div>
 
-                          <div style={{ marginTop: 12 }}>
+                          <div style={{ marginTop: 12, minWidth: 0 }}>
                             <div style={{ fontWeight: 700, marginBottom: 8, color: COLORS.blue }}>
                               Teilnehmer
                             </div>
@@ -1238,9 +1342,11 @@ export default function App() {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: isMobile ? "1fr" : "360px 1fr",
+                  gridTemplateColumns: isMobile ? "1fr" : "360px minmax(0, 1fr)",
                   gap: 18,
                   alignItems: "start",
+                  minWidth: 0,
+                  width: "100%",
                 }}
               >
                 <div
@@ -1249,6 +1355,9 @@ export default function App() {
                     border: `1px solid ${COLORS.line}`,
                     borderRadius: 14,
                     padding: 14,
+                    minWidth: 0,
+                    width: "100%",
+                    boxSizing: "border-box",
                   }}
                 >
                   <div
@@ -1262,7 +1371,7 @@ export default function App() {
                     {editingPlayerId ? "Spieler bearbeiten" : "Spieler anlegen"}
                   </div>
 
-                  <div style={{ display: "grid", gap: 10 }}>
+                  <div style={{ display: "grid", gap: 10, minWidth: 0 }}>
                     <input
                       placeholder="Name"
                       value={playerName}
@@ -1296,10 +1405,16 @@ export default function App() {
                     />
 
                     <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                      <button onClick={savePlayer} style={successButton()}>
+                      <button
+                        onClick={savePlayer}
+                        style={successButton({ width: isMobile ? "100%" : "auto" })}
+                      >
                         {editingPlayerId ? "Änderungen speichern" : "Spieler speichern"}
                       </button>
-                      <button onClick={resetPlayerForm} style={mutedButton()}>
+                      <button
+                        onClick={resetPlayerForm}
+                        style={mutedButton({ width: isMobile ? "100%" : "auto" })}
+                      >
                         Zurücksetzen
                       </button>
                     </div>
@@ -1312,6 +1427,9 @@ export default function App() {
                     border: `1px solid ${COLORS.line}`,
                     borderRadius: 14,
                     padding: 14,
+                    minWidth: 0,
+                    width: "100%",
+                    boxSizing: "border-box",
                   }}
                 >
                   <div
@@ -1322,6 +1440,7 @@ export default function App() {
                       flexWrap: "wrap",
                       alignItems: "center",
                       marginBottom: 12,
+                      minWidth: 0,
                     }}
                   >
                     <div style={{ fontSize: 16, fontWeight: 800, color: COLORS.blue }}>
@@ -1334,6 +1453,7 @@ export default function App() {
                         gap: 10,
                         flexWrap: "wrap",
                         width: isMobile ? "100%" : "auto",
+                        minWidth: 0,
                       }}
                     >
                       <input
@@ -1477,7 +1597,7 @@ export default function App() {
                                 style={{
                                   display: "flex",
                                   gap: 6,
-                                  flexWrap: "nowrap",
+                                  flexWrap: isMobile ? "wrap" : "nowrap",
                                   alignItems: "center",
                                 }}
                               >
@@ -1486,6 +1606,7 @@ export default function App() {
                                   style={mutedButton({
                                     padding: "6px 10px",
                                     fontSize: 13,
+                                    width: isMobile ? "100%" : "auto",
                                   })}
                                 >
                                   Bearbeiten
@@ -1495,6 +1616,7 @@ export default function App() {
                                   style={dangerButton({
                                     padding: "6px 10px",
                                     fontSize: 13,
+                                    width: isMobile ? "100%" : "auto",
                                   })}
                                 >
                                   Löschen
@@ -1530,7 +1652,9 @@ export default function App() {
                   padding: 14,
                   display: "grid",
                   gap: 10,
-                  maxWidth: 520,
+                  maxWidth: isMobile ? "100%" : 520,
+                  minWidth: 0,
+                  boxSizing: "border-box",
                 }}
               >
                 <div
@@ -1551,7 +1675,10 @@ export default function App() {
                   style={inputStyle()}
                 />
 
-                <button onClick={saveSettings} style={successButton()}>
+                <button
+                  onClick={saveSettings}
+                  style={successButton({ width: isMobile ? "100%" : "auto" })}
+                >
                   Überschrift speichern
                 </button>
 
@@ -1563,6 +1690,7 @@ export default function App() {
                     border: `1px solid ${COLORS.line}`,
                     color: COLORS.muted,
                     lineHeight: 1.5,
+                    wordBreak: "break-word",
                   }}
                 >
                   Das Vereinslogo wird jetzt fest über eine öffentliche URL geladen.
@@ -1595,7 +1723,7 @@ export default function App() {
   }
 
   return (
-    <div style={shellStyle()}>
+    <div style={shellStyle(isMobile)}>
       <div
         style={{
           display: "flex",
@@ -1606,22 +1734,35 @@ export default function App() {
           flexWrap: "wrap",
           background: COLORS.white,
           borderRadius: 18,
-          padding: "18px 20px",
+          padding: isMobile ? 14 : "18px 20px",
           boxShadow: "0 8px 22px rgba(2,43,69,0.08)",
           border: `1px solid ${COLORS.line}`,
+          minWidth: 0,
+          width: "100%",
+          maxWidth: "100%",
+          boxSizing: "border-box",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 14, minWidth: 0 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 14,
+            minWidth: 0,
+            flex: "1 1 auto",
+          }}
+        >
           {clubLogo ? (
             <img
               src={clubLogo}
               alt="Logo"
               style={{
-                height: 64,
-                width: 64,
+                height: isMobile ? 54 : 64,
+                width: isMobile ? 54 : 64,
                 borderRadius: 12,
                 objectFit: "cover",
                 border: `2px solid ${COLORS.red}`,
+                flexShrink: 0,
               }}
             />
           ) : null}
@@ -1630,7 +1771,7 @@ export default function App() {
             <h1
               style={{
                 margin: 0,
-                fontSize: isMobile ? 24 : 30,
+                fontSize: isMobile ? 20 : 30,
                 lineHeight: 1.15,
                 color: COLORS.blue,
                 wordBreak: "break-word",
@@ -1644,26 +1785,36 @@ export default function App() {
         <div
           style={{
             display: "flex",
-            alignItems: "center",
+            alignItems: isMobile ? "stretch" : "center",
             gap: 12,
             marginLeft: "auto",
             flexWrap: "wrap",
             justifyContent: "flex-end",
+            width: isMobile ? "100%" : "auto",
+            minWidth: 0,
           }}
         >
           <div
             style={{
               fontSize: 15,
               color: COLORS.muted,
-              textAlign: "right",
+              textAlign: isMobile ? "left" : "right",
               lineHeight: 1.35,
+              minWidth: 0,
+              flex: isMobile ? "1 1 100%" : "0 1 auto",
+              wordBreak: "break-word",
             }}
           >
             Angemeldet als <strong style={{ color: COLORS.blue }}>{currentUser.name}</strong>
             {currentUser.role ? ` · ${currentUser.role}` : ""}
           </div>
 
-          <button onClick={logout} style={dangerButton()}>
+          <button
+            onClick={logout}
+            style={dangerButton({
+              width: isMobile ? "100%" : "auto",
+            })}
+          >
             Abmelden
           </button>
         </div>
@@ -1675,12 +1826,14 @@ export default function App() {
           gridTemplateColumns: isMobile ? "1fr" : "320px minmax(0,1fr)",
           gap: 20,
           alignItems: "start",
+          minWidth: 0,
+          width: "100%",
         }}
       >
         <div style={cardStyle()}>
           <div style={sectionTitleStyle()}>Turniere</div>
 
-          <div style={{ display: "grid", gap: 8 }}>
+          <div style={{ display: "grid", gap: 8, minWidth: 0 }}>
             {tournaments.map((t) => (
               <div
                 key={t.id}
@@ -1696,6 +1849,7 @@ export default function App() {
                       : `1px solid ${COLORS.line}`,
                   transition: "0.15s",
                   minWidth: 0,
+                  boxSizing: "border-box",
                 }}
               >
                 <div
@@ -1782,13 +1936,22 @@ export default function App() {
               </div>
 
               <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 16 }}>
-                <button onClick={() => saveStatus("dabei")} style={successButton()}>
+                <button
+                  onClick={() => saveStatus("dabei")}
+                  style={successButton({ width: isMobile ? "100%" : "auto" })}
+                >
                   Ich bin dabei
                 </button>
-                <button onClick={() => saveStatus("nicht dabei")} style={warnButton()}>
+                <button
+                  onClick={() => saveStatus("nicht dabei")}
+                  style={warnButton({ width: isMobile ? "100%" : "auto" })}
+                >
                   Ich bin nicht dabei
                 </button>
-                <button onClick={deleteMyEntry} style={dangerButton()}>
+                <button
+                  onClick={deleteMyEntry}
+                  style={dangerButton({ width: isMobile ? "100%" : "auto" })}
+                >
                   Meldung löschen
                 </button>
               </div>
