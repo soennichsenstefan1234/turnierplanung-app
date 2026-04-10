@@ -96,57 +96,44 @@ function shellStyle(isMobile: boolean): React.CSSProperties {
     color: COLORS.text,
     boxSizing: "border-box",
     width: "100%",
-    maxWidth: "100%",
     overflowX: "hidden",
   };
 }
 
-function pageInnerStyle(isMobile: boolean): React.CSSProperties {
+function pageInnerStyle(): React.CSSProperties {
   return {
     width: "100%",
-    maxWidth: isMobile ? 420 : 1200,
+    maxWidth: 1100,
     margin: "0 auto",
-    minWidth: 0,
     boxSizing: "border-box",
+    minWidth: 0,
   };
-}
-
-function mobileViewportCardStyle(isMobile: boolean): React.CSSProperties {
-  return isMobile
-    ? {
-        width: "calc(100vw - 24px)",
-        maxWidth: "calc(100vw - 24px)",
-        margin: "0 auto",
-        boxSizing: "border-box",
-      }
-    : {
-        width: "100%",
-        maxWidth: "100%",
-        margin: "0 auto",
-        boxSizing: "border-box",
-      };
 }
 
 function cardStyle(): React.CSSProperties {
   return {
     background: COLORS.card,
     borderRadius: 18,
-    padding: 18,
+    padding: 16,
     boxShadow: "0 10px 24px rgba(2,43,69,0.08)",
     border: `1px solid ${COLORS.line}`,
     boxSizing: "border-box",
     width: "100%",
-    maxWidth: "100%",
     minWidth: 0,
+  };
+}
+
+function headerCardStyle(isMobile: boolean): React.CSSProperties {
+  return {
+    ...cardStyle(),
+    padding: isMobile ? 14 : 18,
+    marginBottom: 18,
   };
 }
 
 function inputStyle(extra: React.CSSProperties = {}): React.CSSProperties {
   return {
     width: "100%",
-    maxWidth: "100%",
-    minWidth: 0,
-    display: "block",
     padding: 11,
     borderRadius: 10,
     border: `1px solid ${COLORS.line}`,
@@ -154,8 +141,7 @@ function inputStyle(extra: React.CSSProperties = {}): React.CSSProperties {
     background: "#fffdf2",
     outline: "none",
     fontSize: 16,
-    appearance: "none" as any,
-    WebkitAppearance: "none" as any,
+    minWidth: 0,
     ...extra,
   };
 }
@@ -170,7 +156,7 @@ function primaryButton(extra: React.CSSProperties = {}): React.CSSProperties {
     borderRadius: 10,
     border: "none",
     background: COLORS.red,
-    color: "white",
+    color: COLORS.white,
     fontWeight: 700,
     cursor: "pointer",
     boxSizing: "border-box",
@@ -179,42 +165,26 @@ function primaryButton(extra: React.CSSProperties = {}): React.CSSProperties {
 }
 
 function successButton(extra: React.CSSProperties = {}): React.CSSProperties {
-  return {
-    ...primaryButton(),
-    background: COLORS.green,
-    ...extra,
-  };
+  return { ...primaryButton(), background: COLORS.green, ...extra };
 }
 
 function warnButton(extra: React.CSSProperties = {}): React.CSSProperties {
-  return {
-    ...primaryButton(),
-    background: COLORS.orange,
-    ...extra,
-  };
+  return { ...primaryButton(), background: COLORS.orange, ...extra };
 }
 
 function dangerButton(extra: React.CSSProperties = {}): React.CSSProperties {
-  return {
-    ...primaryButton(),
-    background: COLORS.red,
-    ...extra,
-  };
+  return { ...primaryButton(), background: COLORS.red, ...extra };
 }
 
 function mutedButton(extra: React.CSSProperties = {}): React.CSSProperties {
-  return {
-    ...primaryButton(),
-    background: COLORS.blueSoft,
-    ...extra,
-  };
+  return { ...primaryButton(), background: COLORS.blueSoft, ...extra };
 }
 
 function sectionTitleStyle(): React.CSSProperties {
   return {
     fontSize: 18,
     fontWeight: 800,
-    marginBottom: 14,
+    marginBottom: 12,
     color: COLORS.blue,
   };
 }
@@ -224,10 +194,10 @@ function detailBoxStyle(): React.CSSProperties {
     background: COLORS.soft,
     border: `1px solid ${COLORS.line}`,
     borderRadius: 14,
-    padding: 16,
-    marginBottom: 18,
-    boxSizing: "border-box",
+    padding: 14,
+    marginBottom: 16,
     width: "100%",
+    boxSizing: "border-box",
     minWidth: 0,
   };
 }
@@ -235,7 +205,7 @@ function detailBoxStyle(): React.CSSProperties {
 function detailRowStyle(isMobile: boolean): React.CSSProperties {
   return {
     display: "grid",
-    gridTemplateColumns: isMobile ? "1fr" : "190px minmax(0, 1fr)",
+    gridTemplateColumns: isMobile ? "1fr" : "180px minmax(0,1fr)",
     gap: isMobile ? 4 : 14,
     alignItems: "start",
     padding: "7px 0",
@@ -249,7 +219,6 @@ function detailLabelStyle(isMobile: boolean): React.CSSProperties {
     fontWeight: 700,
     color: COLORS.blue,
     whiteSpace: isMobile ? "normal" : "nowrap",
-    textAlign: "left",
     minWidth: 0,
   };
 }
@@ -260,7 +229,6 @@ function detailValueStyle(): React.CSSProperties {
     whiteSpace: "pre-wrap",
     wordBreak: "break-word",
     overflowWrap: "anywhere",
-    textAlign: "left",
     minWidth: 0,
   };
 }
@@ -268,14 +236,14 @@ function detailValueStyle(): React.CSSProperties {
 function statusBadgeStyle(status: string): React.CSSProperties {
   const isDabei = status === "dabei";
   return {
+    display: "inline-block",
     padding: "5px 10px",
     borderRadius: 999,
     background: isDabei ? COLORS.green : COLORS.orange,
-    color: "white",
+    color: COLORS.white,
     fontWeight: 700,
     fontSize: 13,
     whiteSpace: "nowrap",
-    display: "inline-block",
   };
 }
 
@@ -287,7 +255,6 @@ function tableWrapStyle(): React.CSSProperties {
     background: COLORS.white,
     width: "100%",
     minWidth: 0,
-    maxWidth: "100%",
     boxSizing: "border-box",
   };
 }
@@ -300,10 +267,9 @@ function tableHeaderStyle(columns: string): React.CSSProperties {
     alignItems: "center",
     padding: "12px 14px",
     background: COLORS.blue,
-    borderBottom: `1px solid ${COLORS.blue}`,
-    fontWeight: 800,
     color: COLORS.white,
-    textAlign: "left",
+    fontWeight: 800,
+    borderBottom: `1px solid ${COLORS.blue}`,
     minWidth: 0,
     boxSizing: "border-box",
   };
@@ -322,10 +288,107 @@ function tableRowStyle(
     padding: "12px 14px",
     background: striped ? "#f8fafc" : COLORS.white,
     borderBottom: isLast ? "none" : `1px solid ${COLORS.line}`,
-    textAlign: "left",
     minWidth: 0,
     boxSizing: "border-box",
   };
+}
+
+function AppHeader(props: {
+  isMobile: boolean;
+  clubLogo: string;
+  appTitle: string;
+  currentUser: Player;
+  onLogout: () => void;
+}) {
+  const { isMobile, clubLogo, appTitle, currentUser, onLogout } = props;
+
+  return (
+    <div style={headerCardStyle(isMobile)}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 14,
+          flexWrap: "wrap",
+          minWidth: 0,
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 14,
+            minWidth: 0,
+            flex: "1 1 auto",
+          }}
+        >
+          {clubLogo ? (
+            <img
+              src={clubLogo}
+              alt="Logo"
+              style={{
+                width: isMobile ? 54 : 64,
+                height: isMobile ? 54 : 64,
+                borderRadius: 12,
+                objectFit: "cover",
+                border: `2px solid ${COLORS.red}`,
+                flexShrink: 0,
+              }}
+            />
+          ) : null}
+
+          <div style={{ minWidth: 0 }}>
+            <h1
+              style={{
+                margin: 0,
+                fontSize: isMobile ? 20 : 30,
+                lineHeight: 1.15,
+                color: COLORS.blue,
+                wordBreak: "break-word",
+              }}
+            >
+              {appTitle}
+            </h1>
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            alignItems: isMobile ? "stretch" : "center",
+            gap: 12,
+            flexWrap: "wrap",
+            width: isMobile ? "100%" : "auto",
+            justifyContent: "flex-end",
+            minWidth: 0,
+          }}
+        >
+          <div
+            style={{
+              fontSize: 15,
+              color: COLORS.muted,
+              textAlign: isMobile ? "left" : "right",
+              lineHeight: 1.35,
+              flex: isMobile ? "1 1 100%" : "0 1 auto",
+              minWidth: 0,
+              wordBreak: "break-word",
+            }}
+          >
+            Angemeldet als <strong style={{ color: COLORS.blue }}>{currentUser.name}</strong>
+            {currentUser.role ? ` · ${currentUser.role}` : ""}
+          </div>
+
+          <button
+            onClick={onLogout}
+            style={dangerButton({ width: isMobile ? "100%" : "auto" })}
+          >
+            Abmelden
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default function App() {
@@ -343,9 +406,9 @@ export default function App() {
   const [adminTab, setAdminTab] = useState<
     "turniere" | "spieler" | "einstellungen"
   >("turniere");
+
   const [appTitle, setAppTitle] = useState("SSV Höchstädt Turnierplanung");
   const [titleInput, setTitleInput] = useState("SSV Höchstädt Turnierplanung");
-  const [clubLogo] = useState(CLUB_LOGO_PUBLIC_URL);
   const [loadError, setLoadError] = useState("");
 
   const [editingPlayerId, setEditingPlayerId] = useState<string | null>(null);
@@ -375,18 +438,18 @@ export default function App() {
     typeof window !== "undefined" ? window.innerWidth <= 900 : false
   );
 
+  const clubLogo = CLUB_LOGO_PUBLIC_URL;
+
   useEffect(() => {
     document.documentElement.style.margin = "0";
     document.documentElement.style.padding = "0";
     document.documentElement.style.width = "100%";
-    document.documentElement.style.maxWidth = "100%";
     document.documentElement.style.overflowX = "hidden";
     document.documentElement.style.boxSizing = "border-box";
 
     document.body.style.margin = "0";
     document.body.style.padding = "0";
     document.body.style.width = "100%";
-    document.body.style.maxWidth = "100%";
     document.body.style.overflowX = "hidden";
     document.body.style.boxSizing = "border-box";
 
@@ -447,10 +510,7 @@ export default function App() {
       setEntries(loadedEntries);
 
       setSelectedPlayerId((current) => {
-        if (
-          current &&
-          loadedPlayers.some((pl) => String(pl.id) === String(current))
-        ) {
+        if (current && loadedPlayers.some((pl) => String(pl.id) === String(current))) {
           return current;
         }
         return loadedPlayers[0]?.id || "";
@@ -787,8 +847,8 @@ export default function App() {
   if (loadError) {
     return (
       <div style={shellStyle(isMobile)}>
-        <div style={pageInnerStyle(isMobile)}>
-          <div style={{ ...cardStyle(), ...mobileViewportCardStyle(isMobile), maxWidth: 700 }}>
+        <div style={pageInnerStyle()}>
+          <div style={cardStyle()}>
             <h2 style={{ marginTop: 0, color: COLORS.red }}>Fehler beim Laden</h2>
             <div style={{ color: COLORS.redDark, marginBottom: 14 }}>{loadError}</div>
             <button onClick={() => void loadAll()} style={primaryButton()}>
@@ -810,15 +870,8 @@ export default function App() {
           justifyContent: "center",
         }}
       >
-        <div style={pageInnerStyle(isMobile)}>
-          <div
-            style={{
-              ...cardStyle(),
-              ...mobileViewportCardStyle(isMobile),
-              maxWidth: 460,
-              textAlign: "center",
-            }}
-          >
+        <div style={{ ...pageInnerStyle(), maxWidth: 460 }}>
+          <div style={{ ...cardStyle(), textAlign: "center" }}>
             {clubLogo ? (
               <img
                 src={clubLogo}
@@ -900,116 +953,24 @@ export default function App() {
   if (isAdmin) {
     return (
       <div style={shellStyle(isMobile)}>
-        <div style={pageInnerStyle(isMobile)}>
-          <div
-            style={{
-              ...mobileViewportCardStyle(isMobile),
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: 16,
-              marginBottom: 20,
-              flexWrap: "wrap",
-              background: COLORS.white,
-              borderRadius: 18,
-              padding: isMobile ? 14 : "18px 20px",
-              boxShadow: "0 8px 22px rgba(2,43,69,0.08)",
-              border: `1px solid ${COLORS.line}`,
-              minWidth: 0,
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 14,
-                minWidth: 0,
-                flex: "1 1 auto",
-              }}
-            >
-              {clubLogo ? (
-                <img
-                  src={clubLogo}
-                  alt="Logo"
-                  style={{
-                    height: isMobile ? 54 : 64,
-                    width: isMobile ? 54 : 64,
-                    borderRadius: 12,
-                    objectFit: "cover",
-                    border: `2px solid ${COLORS.red}`,
-                    flexShrink: 0,
-                  }}
-                />
-              ) : null}
+        <div style={pageInnerStyle()}>
+          <AppHeader
+            isMobile={isMobile}
+            clubLogo={clubLogo}
+            appTitle={appTitle}
+            currentUser={currentUser}
+            onLogout={logout}
+          />
 
-              <div style={{ minWidth: 0 }}>
-                <h1
-                  style={{
-                    margin: 0,
-                    fontSize: isMobile ? 20 : 30,
-                    lineHeight: 1.15,
-                    color: COLORS.blue,
-                    wordBreak: "break-word",
-                  }}
-                >
-                  {appTitle}
-                </h1>
-              </div>
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                alignItems: isMobile ? "stretch" : "center",
-                gap: 12,
-                flexWrap: "wrap",
-                justifyContent: "flex-end",
-                width: isMobile ? "100%" : "auto",
-                minWidth: 0,
-              }}
-            >
-              <div
-                style={{
-                  fontSize: 15,
-                  color: COLORS.muted,
-                  textAlign: isMobile ? "left" : "right",
-                  lineHeight: 1.35,
-                  minWidth: 0,
-                  flex: isMobile ? "1 1 100%" : "0 1 auto",
-                  wordBreak: "break-word",
-                }}
-              >
-                Angemeldet als <strong style={{ color: COLORS.blue }}>{currentUser.name}</strong>
-                {currentUser.role ? ` · ${currentUser.role}` : ""}
-              </div>
-
-              <button
-                onClick={logout}
-                style={dangerButton({ width: isMobile ? "100%" : "auto" })}
-              >
-                Abmelden
-              </button>
-            </div>
-          </div>
-
-          <div
-            style={{
-              ...cardStyle(),
-              ...mobileViewportCardStyle(isMobile),
-              padding: 0,
-              overflow: "hidden",
-            }}
-          >
+          <div style={{ ...cardStyle(), padding: 0, overflow: "hidden" }}>
             <div
               style={{
                 background: COLORS.blue,
-                padding: isMobile ? "14px" : "14px 16px",
+                padding: "14px 16px",
                 borderBottom: `1px solid ${COLORS.blue}`,
               }}
             >
-              <div
-                style={{ fontSize: isMobile ? 18 : 20, fontWeight: 800, color: COLORS.white }}
-              >
+              <div style={{ fontSize: isMobile ? 18 : 20, fontWeight: 800, color: COLORS.white }}>
                 Admin-Bereich
               </div>
               <div style={{ fontSize: 13, color: "#d7e4ef", marginTop: 4 }}>
@@ -1021,12 +982,10 @@ export default function App() {
               style={{
                 display: "flex",
                 gap: 10,
-                padding: isMobile ? 12 : 16,
+                padding: 14,
                 flexWrap: "wrap",
                 borderBottom: `1px solid ${COLORS.line}`,
                 background: "#f7fafc",
-                width: "100%",
-                boxSizing: "border-box",
               }}
             >
               <button
@@ -1035,14 +994,12 @@ export default function App() {
               >
                 Turniere
               </button>
-
               <button
                 onClick={() => setAdminTab("spieler")}
                 style={adminTab === "spieler" ? primaryButton() : mutedButton()}
               >
                 Spieler
               </button>
-
               <button
                 onClick={() => setAdminTab("einstellungen")}
                 style={adminTab === "einstellungen" ? primaryButton() : mutedButton()}
@@ -1051,51 +1008,15 @@ export default function App() {
               </button>
             </div>
 
-            <div
-              style={{
-                padding: isMobile ? 12 : 16,
-                width: "100%",
-                boxSizing: "border-box",
-                minWidth: 0,
-              }}
-            >
+            <div style={{ padding: 14 }}>
               {adminTab === "turniere" ? (
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 18,
-                    alignItems: "stretch",
-                    width: "100%",
-                    maxWidth: "100%",
-                    overflowX: "hidden",
-                    minWidth: 0,
-                  }}
-                >
-                  <div
-                    style={{
-                      background: COLORS.soft,
-                      border: `1px solid ${COLORS.line}`,
-                      borderRadius: 14,
-                      padding: 14,
-                      width: "100%",
-                      maxWidth: "100%",
-                      minWidth: 0,
-                      boxSizing: "border-box",
-                    }}
-                  >
-                    <div
-                      style={{
-                        fontSize: 18,
-                        fontWeight: 800,
-                        marginBottom: 12,
-                        color: COLORS.blue,
-                      }}
-                    >
+                <div style={{ display: "grid", gap: 16 }}>
+                  <div style={{ ...cardStyle(), background: COLORS.soft }}>
+                    <div style={sectionTitleStyle()}>
                       {editingTournamentId ? "Turnier bearbeiten" : "Turnier anlegen"}
                     </div>
 
-                    <div style={{ display: "grid", gap: 10, width: "100%", minWidth: 0 }}>
+                    <div style={{ display: "grid", gap: 10 }}>
                       <input
                         placeholder="Turniername"
                         value={tournamentTitle}
@@ -1182,14 +1103,7 @@ export default function App() {
                         style={{ ...inputStyle(), minHeight: 90, resize: "vertical" }}
                       />
 
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: 10,
-                          flexWrap: "wrap",
-                          width: "100%",
-                        }}
-                      >
+                      <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
                         <button
                           onClick={saveTournament}
                           style={successButton({ width: isMobile ? "100%" : "auto" })}
@@ -1206,30 +1120,10 @@ export default function App() {
                     </div>
                   </div>
 
-                  <div
-                    style={{
-                      background: COLORS.white,
-                      border: `1px solid ${COLORS.line}`,
-                      borderRadius: 14,
-                      padding: 14,
-                      width: "100%",
-                      maxWidth: "100%",
-                      minWidth: 0,
-                      boxSizing: "border-box",
-                    }}
-                  >
-                    <div
-                      style={{
-                        fontSize: 16,
-                        fontWeight: 800,
-                        marginBottom: 10,
-                        color: COLORS.blue,
-                      }}
-                    >
-                      Gemeldete Turniere
-                    </div>
+                  <div style={cardStyle()}>
+                    <div style={sectionTitleStyle()}>Gemeldete Turniere</div>
 
-                    <div style={{ display: "grid", gap: 10, width: "100%", minWidth: 0 }}>
+                    <div style={{ display: "grid", gap: 12 }}>
                       {tournaments.map((t) => {
                         const tournamentEntries = entries
                           .filter((e) => String(e.tournament_id) === String(t.id))
@@ -1243,10 +1137,6 @@ export default function App() {
                               borderRadius: 12,
                               background: COLORS.soft,
                               border: `1px solid ${COLORS.line}`,
-                              width: "100%",
-                              maxWidth: "100%",
-                              minWidth: 0,
-                              boxSizing: "border-box",
                             }}
                           >
                             <div
@@ -1254,10 +1144,9 @@ export default function App() {
                                 display: "flex",
                                 justifyContent: "space-between",
                                 gap: 10,
-                                alignItems: "flex-start",
                                 flexWrap: "wrap",
+                                alignItems: "flex-start",
                                 marginBottom: 12,
-                                minWidth: 0,
                               }}
                             >
                               <div style={{ minWidth: 0, flex: 1 }}>
@@ -1267,7 +1156,6 @@ export default function App() {
                                     fontSize: 17,
                                     color: COLORS.blue,
                                     wordBreak: "break-word",
-                                    overflowWrap: "anywhere",
                                   }}
                                 >
                                   {t.title}
@@ -1338,68 +1226,56 @@ export default function App() {
                               </div>
                             </div>
 
-                            <div style={{ marginTop: 12, minWidth: 0 }}>
-                              <div
-                                style={{
-                                  fontWeight: 700,
-                                  marginBottom: 8,
-                                  color: COLORS.blue,
-                                }}
-                              >
-                                Teilnehmer
-                              </div>
+                            <div style={{ fontWeight: 700, marginBottom: 8, color: COLORS.blue }}>
+                              Teilnehmer
+                            </div>
 
-                              {tournamentEntries.length > 0 ? (
-                                <div style={{ ...tableWrapStyle(), overflowX: "auto" }}>
-                                  <div style={{ minWidth: 520 }}>
-                                    <div
-                                      style={tableHeaderStyle(
-                                        "minmax(220px, 1.6fr) minmax(140px, 1fr) minmax(120px, 0.9fr)"
-                                      )}
-                                    >
-                                      <div>Name</div>
-                                      <div>Passnummer</div>
-                                      <div>Status</div>
-                                    </div>
+                            {tournamentEntries.length > 0 ? (
+                              <div style={{ ...tableWrapStyle(), overflowX: "auto" }}>
+                                <div style={{ minWidth: 520 }}>
+                                  <div
+                                    style={tableHeaderStyle(
+                                      "minmax(220px, 1.6fr) minmax(140px, 1fr) minmax(120px, 0.9fr)"
+                                    )}
+                                  >
+                                    <div>Name</div>
+                                    <div>Passnummer</div>
+                                    <div>Status</div>
+                                  </div>
 
-                                    <div style={{ display: "grid" }}>
-                                      {tournamentEntries.map((e, index) => (
-                                        <div
-                                          key={e.id}
-                                          style={tableRowStyle(
-                                            "minmax(220px, 1.6fr) minmax(140px, 1fr) minmax(120px, 0.9fr)",
-                                            index % 2 === 1,
-                                            index === tournamentEntries.length - 1
-                                          )}
-                                        >
-                                          <div style={{ fontWeight: 700, color: COLORS.text }}>
-                                            {e.player_name}
-                                          </div>
-                                          <div>{getPassNumberByPlayerName(e.player_name)}</div>
-                                          <div>
-                                            <span style={statusBadgeStyle(e.status)}>
-                                              {e.status}
-                                            </span>
-                                          </div>
+                                  <div style={{ display: "grid" }}>
+                                    {tournamentEntries.map((e, index) => (
+                                      <div
+                                        key={e.id}
+                                        style={tableRowStyle(
+                                          "minmax(220px, 1.6fr) minmax(140px, 1fr) minmax(120px, 0.9fr)",
+                                          index % 2 === 1,
+                                          index === tournamentEntries.length - 1
+                                        )}
+                                      >
+                                        <div style={{ fontWeight: 700 }}>{e.player_name}</div>
+                                        <div>{getPassNumberByPlayerName(e.player_name)}</div>
+                                        <div>
+                                          <span style={statusBadgeStyle(e.status)}>
+                                            {e.status}
+                                          </span>
                                         </div>
-                                      ))}
-                                    </div>
+                                      </div>
+                                    ))}
                                   </div>
                                 </div>
-                              ) : (
-                                <div style={{ color: COLORS.muted }}>
-                                  Noch keine Teilnehmer vorhanden.
-                                </div>
-                              )}
-                            </div>
+                              </div>
+                            ) : (
+                              <div style={{ color: COLORS.muted }}>
+                                Noch keine Teilnehmer vorhanden.
+                              </div>
+                            )}
                           </div>
                         );
                       })}
 
                       {tournaments.length === 0 ? (
-                        <div style={{ color: COLORS.muted }}>
-                          Noch keine Turniere angelegt.
-                        </div>
+                        <div style={{ color: COLORS.muted }}>Noch keine Turniere angelegt.</div>
                       ) : null}
                     </div>
                   </div>
@@ -1407,42 +1283,13 @@ export default function App() {
               ) : null}
 
               {adminTab === "spieler" ? (
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 18,
-                    alignItems: "stretch",
-                    width: "100%",
-                    maxWidth: "100%",
-                    overflowX: "hidden",
-                    minWidth: 0,
-                  }}
-                >
-                  <div
-                    style={{
-                      background: COLORS.soft,
-                      border: `1px solid ${COLORS.line}`,
-                      borderRadius: 14,
-                      padding: 14,
-                      width: "100%",
-                      maxWidth: "100%",
-                      minWidth: 0,
-                      boxSizing: "border-box",
-                    }}
-                  >
-                    <div
-                      style={{
-                        fontSize: 18,
-                        fontWeight: 800,
-                        marginBottom: 12,
-                        color: COLORS.blue,
-                      }}
-                    >
+                <div style={{ display: "grid", gap: 16 }}>
+                  <div style={{ ...cardStyle(), background: COLORS.soft }}>
+                    <div style={sectionTitleStyle()}>
                       {editingPlayerId ? "Spieler bearbeiten" : "Spieler anlegen"}
                     </div>
 
-                    <div style={{ display: "grid", gap: 10, width: "100%", minWidth: 0 }}>
+                    <div style={{ display: "grid", gap: 10 }}>
                       <input
                         placeholder="Name"
                         value={playerName}
@@ -1492,18 +1339,7 @@ export default function App() {
                     </div>
                   </div>
 
-                  <div
-                    style={{
-                      background: COLORS.white,
-                      border: `1px solid ${COLORS.line}`,
-                      borderRadius: 14,
-                      padding: 14,
-                      width: "100%",
-                      maxWidth: "100%",
-                      minWidth: 0,
-                      boxSizing: "border-box",
-                    }}
-                  >
+                  <div style={cardStyle()}>
                     <div
                       style={{
                         display: "flex",
@@ -1512,7 +1348,6 @@ export default function App() {
                         flexWrap: "wrap",
                         alignItems: "center",
                         marginBottom: 12,
-                        minWidth: 0,
                       }}
                     >
                       <div style={{ fontSize: 16, fontWeight: 800, color: COLORS.blue }}>
@@ -1525,7 +1360,6 @@ export default function App() {
                           gap: 10,
                           flexWrap: "wrap",
                           width: isMobile ? "100%" : "auto",
-                          minWidth: 0,
                         }}
                       >
                         <input
@@ -1716,76 +1550,57 @@ export default function App() {
               ) : null}
 
               {adminTab === "einstellungen" ? (
-                <div
-                  style={{
-                    background: COLORS.soft,
-                    border: `1px solid ${COLORS.line}`,
-                    borderRadius: 14,
-                    padding: 14,
-                    display: "grid",
-                    gap: 10,
-                    maxWidth: "100%",
-                    minWidth: 0,
-                    boxSizing: "border-box",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: 18,
-                      fontWeight: 800,
-                      marginBottom: 4,
-                      color: COLORS.blue,
-                    }}
-                  >
-                    Einstellungen
-                  </div>
+                <div style={{ ...cardStyle(), background: COLORS.soft }}>
+                  <div style={sectionTitleStyle()}>Einstellungen</div>
 
-                  <input
-                    placeholder="Überschrift"
-                    value={titleInput}
-                    onChange={(e) => setTitleInput(e.target.value)}
-                    style={inputStyle()}
-                  />
+                  <div style={{ display: "grid", gap: 10 }}>
+                    <input
+                      placeholder="Überschrift"
+                      value={titleInput}
+                      onChange={(e) => setTitleInput(e.target.value)}
+                      style={inputStyle()}
+                    />
 
-                  <button
-                    onClick={saveSettings}
-                    style={successButton({ width: isMobile ? "100%" : "auto" })}
-                  >
-                    Überschrift speichern
-                  </button>
+                    <button
+                      onClick={saveSettings}
+                      style={successButton({ width: isMobile ? "100%" : "auto" })}
+                    >
+                      Überschrift speichern
+                    </button>
 
-                  <div
-                    style={{
-                      padding: 12,
-                      borderRadius: 10,
-                      background: "#fff",
-                      border: `1px solid ${COLORS.line}`,
-                      color: COLORS.muted,
-                      lineHeight: 1.5,
-                      wordBreak: "break-word",
-                    }}
-                  >
-                    Das Vereinslogo wird jetzt fest über eine öffentliche URL geladen.
-                    Änderungen am Logo bitte direkt oben im Code bei
-                    <strong> CLUB_LOGO_PUBLIC_URL </strong>
-                    vornehmen.
-                  </div>
-
-                  {clubLogo ? (
-                    <div style={{ marginTop: 6 }}>
-                      <img
-                        src={clubLogo}
-                        alt="Vereinslogo"
-                        style={{
-                          width: 90,
-                          height: 90,
-                          objectFit: "cover",
-                          borderRadius: 14,
-                          border: `2px solid ${COLORS.red}`,
-                        }}
-                      />
+                    <div
+                      style={{
+                        padding: 12,
+                        borderRadius: 10,
+                        background: "#fff",
+                        border: `1px solid ${COLORS.line}`,
+                        color: COLORS.muted,
+                        lineHeight: 1.5,
+                        wordBreak: "break-word",
+                      }}
+                    >
+                      Das Vereinslogo wird fest über eine öffentliche URL geladen.
+                      Änderungen bitte direkt oben im Code bei
+                      <strong> CLUB_LOGO_PUBLIC_URL </strong>
+                      vornehmen.
                     </div>
-                  ) : null}
+
+                    {clubLogo ? (
+                      <div style={{ marginTop: 6 }}>
+                        <img
+                          src={clubLogo}
+                          alt="Vereinslogo"
+                          style={{
+                            width: 90,
+                            height: 90,
+                            objectFit: "cover",
+                            borderRadius: 14,
+                            border: `2px solid ${COLORS.red}`,
+                          }}
+                        />
+                      </div>
+                    ) : null}
+                  </div>
                 </div>
               ) : null}
             </div>
@@ -1797,112 +1612,27 @@ export default function App() {
 
   return (
     <div style={shellStyle(isMobile)}>
-      <div style={pageInnerStyle(isMobile)}>
-        <div
-          style={{
-            ...mobileViewportCardStyle(isMobile),
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: 16,
-            marginBottom: 20,
-            flexWrap: "wrap",
-            background: COLORS.white,
-            borderRadius: 18,
-            padding: isMobile ? 14 : "18px 20px",
-            boxShadow: "0 8px 22px rgba(2,43,69,0.08)",
-            border: `1px solid ${COLORS.line}`,
-            minWidth: 0,
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 14,
-              minWidth: 0,
-              flex: "1 1 auto",
-            }}
-          >
-            {clubLogo ? (
-              <img
-                src={clubLogo}
-                alt="Logo"
-                style={{
-                  height: isMobile ? 54 : 64,
-                  width: isMobile ? 54 : 64,
-                  borderRadius: 12,
-                  objectFit: "cover",
-                  border: `2px solid ${COLORS.red}`,
-                  flexShrink: 0,
-                }}
-              />
-            ) : null}
-
-            <div style={{ minWidth: 0 }}>
-              <h1
-                style={{
-                  margin: 0,
-                  fontSize: isMobile ? 20 : 30,
-                  lineHeight: 1.15,
-                  color: COLORS.blue,
-                  wordBreak: "break-word",
-                }}
-              >
-                {appTitle}
-              </h1>
-            </div>
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              alignItems: isMobile ? "stretch" : "center",
-              gap: 12,
-              flexWrap: "wrap",
-              justifyContent: "flex-end",
-              width: isMobile ? "100%" : "auto",
-              minWidth: 0,
-            }}
-          >
-            <div
-              style={{
-                fontSize: 15,
-                color: COLORS.muted,
-                textAlign: isMobile ? "left" : "right",
-                lineHeight: 1.35,
-                minWidth: 0,
-                flex: isMobile ? "1 1 100%" : "0 1 auto",
-                wordBreak: "break-word",
-              }}
-            >
-              Angemeldet als <strong style={{ color: COLORS.blue }}>{currentUser.name}</strong>
-              {currentUser.role ? ` · ${currentUser.role}` : ""}
-            </div>
-
-            <button
-              onClick={logout}
-              style={dangerButton({ width: isMobile ? "100%" : "auto" })}
-            >
-              Abmelden
-            </button>
-          </div>
-        </div>
+      <div style={pageInnerStyle()}>
+        <AppHeader
+          isMobile={isMobile}
+          clubLogo={clubLogo}
+          appTitle={appTitle}
+          currentUser={currentUser}
+          onLogout={logout}
+        />
 
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: isMobile ? "1fr" : "320px minmax(0,1fr)",
-            gap: 20,
+            gridTemplateColumns: isMobile ? "1fr" : "320px minmax(0, 1fr)",
+            gap: 18,
             alignItems: "start",
-            width: "100%",
-            minWidth: 0,
           }}
         >
-          <div style={{ ...cardStyle(), ...mobileViewportCardStyle(isMobile) }}>
+          <div style={cardStyle()}>
             <div style={sectionTitleStyle()}>Turniere</div>
 
-            <div style={{ display: "grid", gap: 8, minWidth: 0 }}>
+            <div style={{ display: "grid", gap: 8 }}>
               {tournaments.map((t) => (
                 <div
                   key={t.id}
@@ -1918,7 +1648,6 @@ export default function App() {
                         : `1px solid ${COLORS.line}`,
                     transition: "0.15s",
                     minWidth: 0,
-                    boxSizing: "border-box",
                   }}
                 >
                   <div
@@ -1928,7 +1657,6 @@ export default function App() {
                       marginBottom: 4,
                       fontWeight: 600,
                       wordBreak: "break-word",
-                      overflowWrap: "anywhere",
                     }}
                   >
                     {formatDate(t.date)}
@@ -1938,8 +1666,6 @@ export default function App() {
                       fontWeight: 700,
                       color: activeTournamentId === t.id ? COLORS.redDark : COLORS.blue,
                       wordBreak: "break-word",
-                      overflowWrap: "anywhere",
-                      whiteSpace: "normal",
                     }}
                   >
                     {t.title}
@@ -1953,13 +1679,7 @@ export default function App() {
             </div>
           </div>
 
-          <div
-            style={{
-              ...cardStyle(),
-              ...mobileViewportCardStyle(isMobile),
-              minWidth: 0,
-            }}
-          >
+          <div style={cardStyle()}>
             {activeTournament ? (
               <>
                 <h2
@@ -1968,8 +1688,6 @@ export default function App() {
                     marginBottom: 12,
                     color: COLORS.blue,
                     wordBreak: "break-word",
-                    overflowWrap: "anywhere",
-                    whiteSpace: "normal",
                   }}
                 >
                   {activeTournament.title}
@@ -2058,9 +1776,7 @@ export default function App() {
                               index === activeEntries.length - 1
                             )}
                           >
-                            <div style={{ fontWeight: 700, color: COLORS.text }}>
-                              {e.player_name}
-                            </div>
+                            <div style={{ fontWeight: 700 }}>{e.player_name}</div>
                             <div>{getPassNumberByPlayerName(e.player_name)}</div>
                             <div>
                               <span style={statusBadgeStyle(e.status)}>{e.status}</span>
