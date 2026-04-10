@@ -96,6 +96,7 @@ function shellStyle(isMobile: boolean): React.CSSProperties {
     color: COLORS.text,
     boxSizing: "border-box",
     width: "100%",
+    maxWidth: "100%",
     overflowX: "hidden",
   };
 }
@@ -349,6 +350,30 @@ export default function App() {
   );
 
   useEffect(() => {
+    document.documentElement.style.margin = "0";
+    document.documentElement.style.padding = "0";
+    document.documentElement.style.width = "100%";
+    document.documentElement.style.maxWidth = "100%";
+    document.documentElement.style.overflowX = "hidden";
+    document.documentElement.style.boxSizing = "border-box";
+
+    document.body.style.margin = "0";
+    document.body.style.padding = "0";
+    document.body.style.width = "100%";
+    document.body.style.maxWidth = "100%";
+    document.body.style.overflowX = "hidden";
+    document.body.style.boxSizing = "border-box";
+
+    const root = document.getElementById("root");
+    if (root) {
+      root.style.margin = "0";
+      root.style.padding = "0";
+      root.style.width = "100%";
+      root.style.maxWidth = "100%";
+      root.style.overflowX = "hidden";
+      root.style.boxSizing = "border-box";
+    }
+
     const savedTitle = localStorage.getItem("turnierplanung_app_title");
     if (savedTitle) {
       setAppTitle(savedTitle);
