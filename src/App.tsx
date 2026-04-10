@@ -6,6 +6,11 @@ const supabase = createClient(
   import.meta.env.VITE_SUPABASE_ANON_KEY
 );
 
+const LOGO_BUCKET = "vereinslogos";
+const LOGO_FILE_NAME = "logo_hoechstaedt.png";
+const CLUB_LOGO_PUBLIC_URL =
+  "https://qlcbiguuzkfhqsphnuwn.supabase.co/storage/v1/object/public/vereinslogos/logo_hoechstaedt.png";
+
 type Player = {
   id: string;
   name: string;
@@ -288,7 +293,7 @@ export default function App() {
   >("turniere");
   const [appTitle, setAppTitle] = useState("SSV Höchstädt Turnierplanung");
   const [titleInput, setTitleInput] = useState("SSV Höchstädt Turnierplanung");
-  const [clubLogo, setClubLogo] = useState("");
+  const [logoVersion, setLogoVersion] = useState(Date.now());
   const [loadError, setLoadError] = useState("");
 
   const [editingPlayerId, setEditingPlayerId] = useState<string | null>(null);
@@ -318,18 +323,17 @@ export default function App() {
     typeof window !== "undefined" ? window.innerWidth <= 900 : false
   );
 
+  const logoSrc = `${CLUB_LOGO_PUBLIC_URL}?v=${logoVersion}`;
+
   useEffect(() => {
     const savedTitle = localStorage.getItem("turnierplanung_app_title");
-    const savedLogo = localStorage.getItem("turnierplanung_club_logo");
 
     if (savedTitle) {
       setAppTitle(savedTitle);
       setTitleInput(savedTitle);
     }
 
-    if (savedLogo) {
-      setClubLogo(savedLogo);
-    }
+    setLogoVersion(Date.now());
 
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 900);
@@ -706,21 +710,32 @@ export default function App() {
     const finalTitle = titleInput || "SSV Höchstädt Turnierplanung";
     setAppTitle(finalTitle);
     localStorage.setItem("turnierplanung_app_title", finalTitle);
-    localStorage.setItem("turnierplanung_club_logo", clubLogo || "");
-    alert("Einstellungen gespeichert.");
+    alert("Überschrift gespeichert.");
   }
 
-  function handleLogoUpload(event: React.ChangeEvent<HTMLInputElement>) {
+  async function handleLogoUpload(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = String(reader.result || "");
-      setClubLogo(result);
-      localStorage.setItem("turnierplanung_club_logo", result);
-    };
-    reader.readAsDataURL(file);
+    if (!file.type.startsWith("image/")) {
+      alert("Bitte eine Bilddatei auswählen.");
+      return;
+    }
+
+    const { error } = await supabase.storage
+      .from(LOGO_BUCKET)
+      .upload(LOGO_FILE_NAME, file, {
+        upsert: true,
+        contentType: file.type,
+      });
+
+    if (error) {
+      alert("Fehler beim Hochladen des Logos: " + error.message);
+      return;
+    }
+
+    setLogoVersion(Date.now());
+    alert("Vereinslogo erfolgreich hochgeladen und für alle sichtbar gespeichert.");
   }
 
   if (loading) {
@@ -752,20 +767,21 @@ export default function App() {
         }}
       >
         <div style={{ ...cardStyle(), width: "100%", maxWidth: 460, textAlign: "center" }}>
-          {clubLogo ? (
-            <img
-              src={clubLogo}
-              alt="Logo"
-              style={{
-                width: 82,
-                height: 82,
-                objectFit: "cover",
-                borderRadius: 16,
-                marginBottom: 14,
-                border: `2px solid ${COLORS.red}`,
-              }}
-            />
-          ) : null}
+          <img
+            src={logoSrc}
+            alt="Logo"
+            onError={(e) => {
+              e.currentTarget.src = CLUB_LOGO_PUBLIC_URL;
+            }}
+            style={{
+              width: 82,
+              height: 82,
+              objectFit: "contain",
+              borderRadius: 16,
+              marginBottom: 14,
+              border: `2px solid ${COLORS.red}`,
+            }}
+          />
 
           <h1
             style={{
@@ -847,19 +863,20 @@ export default function App() {
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 14, minWidth: 0 }}>
-            {clubLogo ? (
-              <img
-                src={clubLogo}
-                alt="Logo"
-                style={{
-                  height: 64,
-                  width: 64,
-                  borderRadius: 12,
-                  objectFit: "cover",
-                  border: `2px solid ${COLORS.red}`,
-                }}
-              />
-            ) : null}
+            <img
+              src={logoSrc}
+              alt="Logo"
+              onError={(e) => {
+                e.currentTarget.src = CLUB_LOGO_PUBLIC_URL;
+              }}
+              style={{
+                height: 64,
+                width: 64,
+                borderRadius: 12,
+                objectFit: "contain",
+                border: `2px solid ${COLORS.red}`,
+              }}
+            />
 
             <div style={{ minWidth: 0 }}>
               <h1
@@ -1547,21 +1564,27 @@ export default function App() {
                   style={inputStyle({ background: "#fff" })}
                 />
 
-                {clubLogo ? (
-                  <div style={{ marginTop: 6 }}>
-                    <img
-                      src={clubLogo}
-                      alt="Vereinslogo"
-                      style={{
-                        width: 90,
-                        height: 90,
-                        objectFit: "cover",
-                        borderRadius: 14,
-                        border: `2px solid ${COLORS.red}`,
-                      }}
-                    />
-                  </div>
-                ) : null}
+                <div style={{ color: COLORS.muted, fontSize: 13, lineHeight: 1.5 }}>
+                  Das Vereinslogo wird direkt in Supabase Storage hochgeladen und ist
+                  danach für alle Nutzer auf PC und Handy sichtbar.
+                </div>
+
+                <div style={{ marginTop: 6 }}>
+                  <img
+                    src={logoSrc}
+                    alt="Vereinslogo"
+                    onError={(e) => {
+                      e.currentTarget.src = CLUB_LOGO_PUBLIC_URL;
+                    }}
+                    style={{
+                      width: 90,
+                      height: 90,
+                      objectFit: "contain",
+                      borderRadius: 14,
+                      border: `2px solid ${COLORS.red}`,
+                    }}
+                  />
+                </div>
               </div>
             ) : null}
           </div>
@@ -1588,19 +1611,20 @@ export default function App() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 14, minWidth: 0 }}>
-          {clubLogo ? (
-            <img
-              src={clubLogo}
-              alt="Logo"
-              style={{
-                height: 64,
-                width: 64,
-                borderRadius: 12,
-                objectFit: "cover",
-                border: `2px solid ${COLORS.red}`,
-              }}
-            />
-          ) : null}
+          <img
+            src={logoSrc}
+            alt="Logo"
+            onError={(e) => {
+              e.currentTarget.src = CLUB_LOGO_PUBLIC_URL;
+            }}
+            style={{
+              height: 64,
+              width: 64,
+              borderRadius: 12,
+              objectFit: "contain",
+              border: `2px solid ${COLORS.red}`,
+            }}
+          />
 
           <div style={{ minWidth: 0 }}>
             <h1
