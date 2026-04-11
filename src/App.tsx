@@ -309,15 +309,21 @@ function mobileInfoCardStyle(): React.CSSProperties {
 
 function AppHeader(props: {
   isMobile: boolean;
+  isNarrowPhone: boolean;
   clubLogo: string;
   appTitle: string;
   currentUser: Player;
   onLogout: () => void;
 }) {
-  const { isMobile, clubLogo, appTitle, currentUser, onLogout } = props;
+  const { isMobile, isNarrowPhone, clubLogo, appTitle, currentUser, onLogout } = props;
 
   return (
-    <div style={headerCardStyle(isMobile)}>
+    <div
+      style={{
+        ...headerCardStyle(isMobile),
+        padding: isNarrowPhone ? 12 : isMobile ? 14 : 18,
+      }}
+    >
       <div
         style={{
           display: "flex",
@@ -332,7 +338,7 @@ function AppHeader(props: {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 14,
+            gap: isNarrowPhone ? 10 : 14,
             minWidth: 0,
             flex: "1 1 auto",
           }}
@@ -342,8 +348,8 @@ function AppHeader(props: {
               src={clubLogo}
               alt="Logo"
               style={{
-                width: isMobile ? 54 : 64,
-                height: isMobile ? 54 : 64,
+                width: isNarrowPhone ? 48 : isMobile ? 54 : 64,
+                height: isNarrowPhone ? 48 : isMobile ? 54 : 64,
                 borderRadius: 12,
                 objectFit: "cover",
                 border: `2px solid ${COLORS.red}`,
@@ -356,7 +362,7 @@ function AppHeader(props: {
             <h1
               style={{
                 margin: 0,
-                fontSize: isMobile ? 20 : 30,
+                fontSize: isNarrowPhone ? 18 : isMobile ? 20 : 30,
                 lineHeight: 1.15,
                 color: COLORS.blue,
                 wordBreak: "break-word",
@@ -380,7 +386,7 @@ function AppHeader(props: {
         >
           <div
             style={{
-              fontSize: 15,
+              fontSize: isNarrowPhone ? 14 : 15,
               color: COLORS.muted,
               textAlign: isMobile ? "left" : "right",
               lineHeight: 1.35,
@@ -451,6 +457,9 @@ export default function App() {
   const [isMobile, setIsMobile] = useState(
     typeof window !== "undefined" ? window.innerWidth <= 900 : false
   );
+  const [isNarrowPhone, setIsNarrowPhone] = useState(
+    typeof window !== "undefined" ? window.innerWidth <= 430 : false
+  );
 
   const clubLogo = CLUB_LOGO_PUBLIC_URL;
 
@@ -485,6 +494,7 @@ export default function App() {
 
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 900);
+      setIsNarrowPhone(window.innerWidth <= 430);
     };
 
     handleResize();
@@ -970,6 +980,7 @@ export default function App() {
         <div style={pageInnerStyle(isMobile)}>
           <AppHeader
             isMobile={isMobile}
+            isNarrowPhone={isNarrowPhone}
             clubLogo={clubLogo}
             appTitle={appTitle}
             currentUser={currentUser}
@@ -980,11 +991,11 @@ export default function App() {
             <div
               style={{
                 background: COLORS.blue,
-                padding: "14px 16px",
+                padding: isNarrowPhone ? "12px 14px" : "14px 16px",
                 borderBottom: `1px solid ${COLORS.blue}`,
               }}
             >
-              <div style={{ fontSize: isMobile ? 18 : 20, fontWeight: 800, color: COLORS.white }}>
+              <div style={{ fontSize: isNarrowPhone ? 17 : isMobile ? 18 : 20, fontWeight: 800, color: COLORS.white }}>
                 Admin-Bereich
               </div>
               <div style={{ fontSize: 13, color: "#d7e4ef", marginTop: 4 }}>
@@ -996,7 +1007,7 @@ export default function App() {
               style={{
                 display: "flex",
                 gap: 10,
-                padding: 14,
+                padding: isNarrowPhone ? 12 : 14,
                 flexWrap: "wrap",
                 borderBottom: `1px solid ${COLORS.line}`,
                 background: "#f7fafc",
@@ -1004,25 +1015,37 @@ export default function App() {
             >
               <button
                 onClick={() => setAdminTab("turniere")}
-                style={adminTab === "turniere" ? primaryButton() : mutedButton()}
+                style={
+                  adminTab === "turniere"
+                    ? primaryButton({ width: isNarrowPhone ? "100%" : "auto" })
+                    : mutedButton({ width: isNarrowPhone ? "100%" : "auto" })
+                }
               >
                 Turniere
               </button>
               <button
                 onClick={() => setAdminTab("spieler")}
-                style={adminTab === "spieler" ? primaryButton() : mutedButton()}
+                style={
+                  adminTab === "spieler"
+                    ? primaryButton({ width: isNarrowPhone ? "100%" : "auto" })
+                    : mutedButton({ width: isNarrowPhone ? "100%" : "auto" })
+                }
               >
                 Spieler
               </button>
               <button
                 onClick={() => setAdminTab("einstellungen")}
-                style={adminTab === "einstellungen" ? primaryButton() : mutedButton()}
+                style={
+                  adminTab === "einstellungen"
+                    ? primaryButton({ width: isNarrowPhone ? "100%" : "auto" })
+                    : mutedButton({ width: isNarrowPhone ? "100%" : "auto" })
+                }
               >
                 Einstellungen
               </button>
             </div>
 
-            <div style={{ padding: 14 }}>
+            <div style={{ padding: isNarrowPhone ? 12 : 14 }}>
               {adminTab === "turniere" ? (
                 <div style={{ display: "grid", gap: 16 }}>
                   <div style={{ ...cardStyle(), background: COLORS.soft }}>
@@ -1120,13 +1143,13 @@ export default function App() {
                       <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
                         <button
                           onClick={saveTournament}
-                          style={successButton({ width: isMobile ? "100%" : "auto" })}
+                          style={successButton({ width: isNarrowPhone ? "100%" : isMobile ? "100%" : "auto" })}
                         >
                           {editingTournamentId ? "Änderungen speichern" : "Turnier speichern"}
                         </button>
                         <button
                           onClick={resetTournamentForm}
-                          style={mutedButton({ width: isMobile ? "100%" : "auto" })}
+                          style={mutedButton({ width: isNarrowPhone ? "100%" : isMobile ? "100%" : "auto" })}
                         >
                           Zurücksetzen
                         </button>
@@ -1181,14 +1204,14 @@ export default function App() {
                                   display: "flex",
                                   gap: 6,
                                   flexWrap: "wrap",
-                                  width: isMobile ? "100%" : "auto",
+                                  width: isNarrowPhone ? "100%" : isMobile ? "100%" : "auto",
                                 }}
                               >
                                 <button
                                   onClick={() => editTournament(t)}
                                   style={mutedButton({
                                     padding: "8px 10px",
-                                    width: isMobile ? "100%" : "auto",
+                                    width: isNarrowPhone ? "100%" : isMobile ? "100%" : "auto",
                                   })}
                                 >
                                   Bearbeiten
@@ -1197,7 +1220,7 @@ export default function App() {
                                   onClick={() => deleteTournament(t.id)}
                                   style={dangerButton({
                                     padding: "8px 10px",
-                                    width: isMobile ? "100%" : "auto",
+                                    width: isNarrowPhone ? "100%" : isMobile ? "100%" : "auto",
                                   })}
                                 >
                                   Löschen
@@ -1364,13 +1387,13 @@ export default function App() {
                       <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
                         <button
                           onClick={savePlayer}
-                          style={successButton({ width: isMobile ? "100%" : "auto" })}
+                          style={successButton({ width: isNarrowPhone ? "100%" : isMobile ? "100%" : "auto" })}
                         >
                           {editingPlayerId ? "Änderungen speichern" : "Spieler speichern"}
                         </button>
                         <button
                           onClick={resetPlayerForm}
-                          style={mutedButton({ width: isMobile ? "100%" : "auto" })}
+                          style={mutedButton({ width: isNarrowPhone ? "100%" : isMobile ? "100%" : "auto" })}
                         >
                           Zurücksetzen
                         </button>
@@ -1696,6 +1719,7 @@ export default function App() {
       <div style={pageInnerStyle(isMobile)}>
         <AppHeader
           isMobile={isMobile}
+          isNarrowPhone={isNarrowPhone}
           clubLogo={clubLogo}
           appTitle={appTitle}
           currentUser={currentUser}
