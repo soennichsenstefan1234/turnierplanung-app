@@ -294,6 +294,19 @@ function tableRowStyle(
   };
 }
 
+function mobileInfoCardStyle(): React.CSSProperties {
+  return {
+    border: `1px solid ${COLORS.line}`,
+    borderRadius: 12,
+    background: COLORS.white,
+    padding: 12,
+    display: "grid",
+    gap: 8,
+    minWidth: 0,
+    boxSizing: "border-box",
+  };
+}
+
 function AppHeader(props: {
   isMobile: boolean;
   clubLogo: string;
@@ -1232,40 +1245,65 @@ export default function App() {
                             </div>
 
                             {tournamentEntries.length > 0 ? (
-                              <div style={{ ...tableWrapStyle(), overflowX: "auto" }}>
-                                <div style={{ minWidth: 520 }}>
-                                  <div
-                                    style={tableHeaderStyle(
-                                      "minmax(220px, 1.6fr) minmax(140px, 1fr) minmax(120px, 0.9fr)"
-                                    )}
-                                  >
-                                    <div>Name</div>
-                                    <div>Passnummer</div>
-                                    <div>Status</div>
-                                  </div>
-
-                                  <div style={{ display: "grid" }}>
-                                    {tournamentEntries.map((e, index) => (
+                              isMobile ? (
+                                <div style={{ display: "grid", gap: 10 }}>
+                                  {tournamentEntries.map((e) => (
+                                    <div key={e.id} style={mobileInfoCardStyle()}>
                                       <div
-                                        key={e.id}
-                                        style={tableRowStyle(
-                                          "minmax(220px, 1.6fr) minmax(140px, 1fr) minmax(120px, 0.9fr)",
-                                          index % 2 === 1,
-                                          index === tournamentEntries.length - 1
-                                        )}
+                                        style={{
+                                          fontWeight: 800,
+                                          color: COLORS.blue,
+                                          wordBreak: "break-word",
+                                        }}
                                       >
-                                        <div style={{ fontWeight: 700 }}>{e.player_name}</div>
-                                        <div>{getPassNumberByPlayerName(e.player_name)}</div>
-                                        <div>
-                                          <span style={statusBadgeStyle(e.status)}>
-                                            {e.status}
-                                          </span>
-                                        </div>
+                                        {e.player_name}
                                       </div>
-                                    ))}
+                                      <div>
+                                        <strong>Passnummer:</strong>{" "}
+                                        {getPassNumberByPlayerName(e.player_name)}
+                                      </div>
+                                      <div>
+                                        <span style={statusBadgeStyle(e.status)}>{e.status}</span>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <div style={{ ...tableWrapStyle(), overflowX: "auto" }}>
+                                  <div style={{ minWidth: 520 }}>
+                                    <div
+                                      style={tableHeaderStyle(
+                                        "minmax(220px, 1.6fr) minmax(140px, 1fr) minmax(120px, 0.9fr)"
+                                      )}
+                                    >
+                                      <div>Name</div>
+                                      <div>Passnummer</div>
+                                      <div>Status</div>
+                                    </div>
+
+                                    <div style={{ display: "grid" }}>
+                                      {tournamentEntries.map((e, index) => (
+                                        <div
+                                          key={e.id}
+                                          style={tableRowStyle(
+                                            "minmax(220px, 1.6fr) minmax(140px, 1fr) minmax(120px, 0.9fr)",
+                                            index % 2 === 1,
+                                            index === tournamentEntries.length - 1
+                                          )}
+                                        >
+                                          <div style={{ fontWeight: 700 }}>{e.player_name}</div>
+                                          <div>{getPassNumberByPlayerName(e.player_name)}</div>
+                                          <div>
+                                            <span style={statusBadgeStyle(e.status)}>
+                                              {e.status}
+                                            </span>
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
+                              )
                             ) : (
                               <div style={{ color: COLORS.muted }}>
                                 Noch keine Teilnehmer vorhanden.
@@ -1402,150 +1440,192 @@ export default function App() {
                       Gefundene Spieler: {filteredAndSortedPlayers.length}
                     </div>
 
-                    <div style={{ ...tableWrapStyle(), overflowX: "auto" }}>
-                      <table
-                        style={{
-                          width: "100%",
-                          minWidth: 560,
-                          borderCollapse: "collapse",
-                          tableLayout: "fixed",
-                          background: COLORS.white,
-                        }}
-                      >
-                        <colgroup>
-                          <col style={{ width: "40%" }} />
-                          <col style={{ width: "28%" }} />
-                          <col style={{ width: "32%" }} />
-                        </colgroup>
+                    {isMobile ? (
+                      <div style={{ display: "grid", gap: 10 }}>
+                        {filteredAndSortedPlayers.map((p) => (
+                          <div key={p.id} style={mobileInfoCardStyle()}>
+                            <div
+                              style={{
+                                fontWeight: 800,
+                                color: COLORS.blue,
+                                wordBreak: "break-word",
+                              }}
+                            >
+                              {p.name}
+                            </div>
+                            <div>
+                              <strong>Passnummer:</strong> {p.pass_number || "-"}
+                            </div>
+                            <div>
+                              <strong>Rolle:</strong> {p.role || "-"}
+                            </div>
+                            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                              <button
+                                onClick={() => editPlayer(p)}
+                                style={mutedButton({ width: "100%" })}
+                              >
+                                Bearbeiten
+                              </button>
+                              <button
+                                onClick={() => deletePlayer(p.id, p.name)}
+                                style={dangerButton({ width: "100%" })}
+                              >
+                                Löschen
+                              </button>
+                            </div>
+                          </div>
+                        ))}
 
-                        <thead>
-                          <tr style={{ background: COLORS.blue }}>
-                            <th
-                              style={{
-                                padding: "14px",
-                                color: COLORS.white,
-                                fontWeight: 800,
-                                textAlign: "left",
-                                fontSize: 16,
-                              }}
-                            >
-                              Name
-                            </th>
-                            <th
-                              style={{
-                                padding: "14px",
-                                color: COLORS.white,
-                                fontWeight: 800,
-                                textAlign: "left",
-                                fontSize: 16,
-                              }}
-                            >
-                              Passnummer
-                            </th>
-                            <th
-                              style={{
-                                padding: "14px",
-                                color: COLORS.white,
-                                fontWeight: 800,
-                                textAlign: "left",
-                                fontSize: 16,
-                              }}
-                            >
-                              Aktionen
-                            </th>
-                          </tr>
-                        </thead>
+                        {filteredAndSortedPlayers.length === 0 ? (
+                          <div style={{ color: COLORS.muted }}>
+                            Keine Spieler zur Suche gefunden.
+                          </div>
+                        ) : null}
+                      </div>
+                    ) : (
+                      <div style={{ ...tableWrapStyle(), overflowX: "auto" }}>
+                        <table
+                          style={{
+                            width: "100%",
+                            minWidth: 560,
+                            borderCollapse: "collapse",
+                            tableLayout: "fixed",
+                            background: COLORS.white,
+                          }}
+                        >
+                          <colgroup>
+                            <col style={{ width: "40%" }} />
+                            <col style={{ width: "28%" }} />
+                            <col style={{ width: "32%" }} />
+                          </colgroup>
 
-                        <tbody>
-                          {filteredAndSortedPlayers.map((p, index) => (
-                            <tr
-                              key={p.id}
-                              style={{
-                                background: index % 2 === 1 ? "#f8fafc" : COLORS.white,
-                                borderBottom:
-                                  index === filteredAndSortedPlayers.length - 1
-                                    ? "none"
-                                    : `1px solid ${COLORS.line}`,
-                              }}
-                            >
-                              <td
+                          <thead>
+                            <tr style={{ background: COLORS.blue }}>
+                              <th
                                 style={{
-                                  padding: "8px 12px",
+                                  padding: "14px",
+                                  color: COLORS.white,
+                                  fontWeight: 800,
                                   textAlign: "left",
-                                  fontWeight: 700,
-                                  color: COLORS.text,
-                                  wordBreak: "break-word",
-                                  verticalAlign: "middle",
+                                  fontSize: 16,
                                 }}
                               >
-                                {p.name}
-                              </td>
-
-                              <td
+                                Name
+                              </th>
+                              <th
                                 style={{
-                                  padding: "8px 12px",
+                                  padding: "14px",
+                                  color: COLORS.white,
+                                  fontWeight: 800,
                                   textAlign: "left",
-                                  fontWeight: 700,
-                                  color: COLORS.blueSoft,
-                                  verticalAlign: "middle",
+                                  fontSize: 16,
                                 }}
                               >
-                                {p.pass_number || "-"}
-                              </td>
-
-                              <td
+                                Passnummer
+                              </th>
+                              <th
                                 style={{
-                                  padding: "8px 12px",
+                                  padding: "14px",
+                                  color: COLORS.white,
+                                  fontWeight: 800,
                                   textAlign: "left",
-                                  verticalAlign: "middle",
+                                  fontSize: 16,
                                 }}
                               >
-                                <div
+                                Aktionen
+                              </th>
+                            </tr>
+                          </thead>
+
+                          <tbody>
+                            {filteredAndSortedPlayers.map((p, index) => (
+                              <tr
+                                key={p.id}
+                                style={{
+                                  background: index % 2 === 1 ? "#f8fafc" : COLORS.white,
+                                  borderBottom:
+                                    index === filteredAndSortedPlayers.length - 1
+                                      ? "none"
+                                      : `1px solid ${COLORS.line}`,
+                                }}
+                              >
+                                <td
                                   style={{
-                                    display: "flex",
-                                    gap: 6,
-                                    flexWrap: isMobile ? "wrap" : "nowrap",
-                                    alignItems: "center",
+                                    padding: "8px 12px",
+                                    textAlign: "left",
+                                    fontWeight: 700,
+                                    color: COLORS.text,
+                                    wordBreak: "break-word",
+                                    verticalAlign: "middle",
                                   }}
                                 >
-                                  <button
-                                    onClick={() => editPlayer(p)}
-                                    style={mutedButton({
-                                      padding: "6px 10px",
-                                      fontSize: 13,
-                                      width: isMobile ? "100%" : "auto",
-                                    })}
-                                  >
-                                    Bearbeiten
-                                  </button>
-                                  <button
-                                    onClick={() => deletePlayer(p.id, p.name)}
-                                    style={dangerButton({
-                                      padding: "6px 10px",
-                                      fontSize: 13,
-                                      width: isMobile ? "100%" : "auto",
-                                    })}
-                                  >
-                                    Löschen
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
+                                  {p.name}
+                                </td>
 
-                          {filteredAndSortedPlayers.length === 0 ? (
-                            <tr>
-                              <td
-                                colSpan={3}
-                                style={{ padding: 14, color: COLORS.muted, textAlign: "left" }}
-                              >
-                                Keine Spieler zur Suche gefunden.
-                              </td>
-                            </tr>
-                          ) : null}
-                        </tbody>
-                      </table>
-                    </div>
+                                <td
+                                  style={{
+                                    padding: "8px 12px",
+                                    textAlign: "left",
+                                    fontWeight: 700,
+                                    color: COLORS.blueSoft,
+                                    verticalAlign: "middle",
+                                  }}
+                                >
+                                  {p.pass_number || "-"}
+                                </td>
+
+                                <td
+                                  style={{
+                                    padding: "8px 12px",
+                                    textAlign: "left",
+                                    verticalAlign: "middle",
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      gap: 6,
+                                      flexWrap: "nowrap",
+                                      alignItems: "center",
+                                    }}
+                                  >
+                                    <button
+                                      onClick={() => editPlayer(p)}
+                                      style={mutedButton({
+                                        padding: "6px 10px",
+                                        fontSize: 13,
+                                      })}
+                                    >
+                                      Bearbeiten
+                                    </button>
+                                    <button
+                                      onClick={() => deletePlayer(p.id, p.name)}
+                                      style={dangerButton({
+                                        padding: "6px 10px",
+                                        fontSize: 13,
+                                      })}
+                                    >
+                                      Löschen
+                                    </button>
+                                  </div>
+                                </td>
+                              </tr>
+                            ))}
+
+                            {filteredAndSortedPlayers.length === 0 ? (
+                              <tr>
+                                <td
+                                  colSpan={3}
+                                  style={{ padding: 14, color: COLORS.muted, textAlign: "left" }}
+                                >
+                                  Keine Spieler zur Suche gefunden.
+                                </td>
+                              </tr>
+                            ) : null}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
                   </div>
                 </div>
               ) : null}
