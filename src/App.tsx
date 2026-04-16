@@ -737,6 +737,16 @@ export default function App() {
     return activeEntries.find((e) => e.player_name === currentUser.name) || null;
   }, [activeEntries, currentUser, activeTournament]);
 
+  const countDabei = useMemo(
+    () => activeEntries.filter((e) => e.status === "dabei").length,
+    [activeEntries]
+  );
+
+  const countNichtDabei = useMemo(
+    () => activeEntries.filter((e) => e.status === "nicht dabei").length,
+    [activeEntries]
+  );
+
   const filteredAndSortedPlayers = useMemo(() => {
     const q = playerSearch.trim().toLowerCase();
 
@@ -1724,7 +1734,10 @@ export default function App() {
                                   {formatDate(activeTournament.date)}
                                 </span>
                                 <span style={pillStyle("green")}>
-                                  {activeEntries.length} Teilnehmer
+                                  Zusagen: {countDabei}
+                                </span>
+                                <span style={pillStyle("orange")}>
+                                  Absagen: {countNichtDabei}
                                 </span>
                               </div>
                             </div>
@@ -2450,7 +2463,10 @@ export default function App() {
                         {formatDate(activeTournament.date)}
                       </span>
                       <span style={pillStyle("green")}>
-                        {activeEntries.length} Teilnehmer
+                        Zusagen: {countDabei}
+                      </span>
+                      <span style={pillStyle("orange")}>
+                        Absagen: {countNichtDabei}
                       </span>
                     </div>
                   </div>
