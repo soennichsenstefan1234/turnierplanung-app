@@ -115,7 +115,6 @@ function appContainerStyle(): React.CSSProperties {
     maxWidth: 1240,
     margin: "0 auto",
     minWidth: 0,
-    maxWidth: "100%",
     overflowX: "hidden",
     boxSizing: "border-box",
   };
