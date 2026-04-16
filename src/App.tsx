@@ -67,6 +67,7 @@ const COLORS = {
   yellowSoft: "#fff4bf",
   white: "#ffffff",
   line: "#d8dee6",
+  lineStrong: "#b8c4d1",
   bg: "#f4f7fb",
   card: "#ffffff",
   soft: "#f8fafc",
@@ -126,7 +127,7 @@ function cardStyle(isMobile: boolean): React.CSSProperties {
     borderRadius: isMobile ? 18 : 22,
     padding: isMobile ? 14 : 20,
     boxShadow: COLORS.shadow,
-    border: `1px solid ${COLORS.line}`,
+    border: `2px solid ${COLORS.lineStrong}`,
     boxSizing: "border-box",
     minWidth: 0,
     width: "100%",
@@ -138,7 +139,7 @@ function cardStyle(isMobile: boolean): React.CSSProperties {
 function softPanelStyle(isMobile: boolean): React.CSSProperties {
   return {
     background: COLORS.soft,
-    border: `1px solid ${COLORS.line}`,
+    border: `2px solid ${COLORS.lineStrong}`,
     borderRadius: 18,
     padding: isMobile ? 12 : 16,
     width: "100%",
@@ -162,7 +163,7 @@ function inputStyle(
     fontSize: 14,
     lineHeight: 1.35,
     borderRadius: 12,
-    border: `1px solid ${COLORS.line}`,
+    border: `2px solid ${COLORS.line}`,
     boxSizing: "border-box",
     background: "#ffffff",
     outline: "none",
@@ -294,7 +295,7 @@ function secondaryGhostButton(
   return {
     padding: isMobile ? "10px 13px" : "11px 15px",
     borderRadius: 12,
-    border: `1px solid ${COLORS.line}`,
+    border: `2px solid ${COLORS.lineStrong}`,
     background: COLORS.white,
     color: COLORS.blue,
     fontWeight: 700,
@@ -314,7 +315,7 @@ function adminTabButtonStyle(
     padding: isMobile ? "9px 12px" : "10px 16px",
     minHeight: isMobile ? 38 : 42,
     borderRadius: 999,
-    border: active ? "none" : `1px solid ${COLORS.line}`,
+    border: active ? "none" : `2px solid ${COLORS.lineStrong}`,
     background: active ? COLORS.red : COLORS.white,
     color: active ? COLORS.white : COLORS.blue,
     fontWeight: 700,
@@ -351,7 +352,7 @@ function sectionSubTitleStyle(): React.CSSProperties {
 function detailBoxStyle(isMobile: boolean): React.CSSProperties {
   return {
     background: COLORS.soft,
-    border: `1px solid ${COLORS.line}`,
+    border: `2px solid ${COLORS.lineStrong}`,
     borderRadius: 18,
     padding: isMobile ? 12 : 16,
     marginBottom: 18,
@@ -369,7 +370,7 @@ function detailRowStyle(isMobile: boolean): React.CSSProperties {
     gap: isMobile ? 4 : 14,
     alignItems: "start",
     padding: isMobile ? "7px 0" : "8px 0",
-    borderBottom: `1px solid ${COLORS.line}`,
+    borderBottom: `2px solid ${COLORS.line}`,
     minWidth: 0,
   };
 }
@@ -433,26 +434,27 @@ function pillStyle(
     fontWeight: 700,
     fontSize: 12,
     maxWidth: "100%",
+    border: `2px solid ${COLORS.line}`,
   };
 }
 
 function statCardStyle(accent: string): React.CSSProperties {
   return {
     background: COLORS.white,
-    border: `1px solid ${COLORS.line}`,
+    border: `2px solid ${COLORS.lineStrong}`,
     borderRadius: 16,
     padding: 14,
     minWidth: 0,
     boxSizing: "border-box",
     boxShadow: "0 8px 18px rgba(2,43,69,0.05)",
-    borderLeft: `5px solid ${accent}`,
+    borderLeft: `6px solid ${accent}`,
     overflowX: "hidden",
   };
 }
 
 function tableWrapStyle(): React.CSSProperties {
   return {
-    border: `1px solid ${COLORS.line}`,
+    border: `2px solid ${COLORS.lineStrong}`,
     borderRadius: 16,
     overflow: "hidden",
     background: COLORS.white,
@@ -467,7 +469,7 @@ function emptyStateStyle(): React.CSSProperties {
     padding: 16,
     borderRadius: 14,
     background: COLORS.soft,
-    border: `1px dashed ${COLORS.line}`,
+    border: `2px dashed ${COLORS.lineStrong}`,
     color: COLORS.muted,
   };
 }
@@ -502,7 +504,7 @@ function ParticipantCard({
         width: "100%",
         maxWidth: "100%",
         minWidth: 0,
-        border: `1px solid ${COLORS.line}`,
+        border: `2px solid ${COLORS.lineStrong}`,
         borderRadius: 14,
         background: COLORS.white,
         padding: 12,
@@ -1145,7 +1147,7 @@ export default function App() {
                 objectFit: "contain",
                 borderRadius: 18,
                 marginBottom: 16,
-                border: `2px solid ${COLORS.red}`,
+                border: `3px solid ${COLORS.red}`,
                 background: "#fff",
                 padding: 6,
               }}
@@ -1265,7 +1267,7 @@ export default function App() {
                     width: isMobile ? 58 : 70,
                     borderRadius: 16,
                     objectFit: "contain",
-                    border: `2px solid ${COLORS.red}`,
+                    border: `3px solid ${COLORS.red}`,
                     background: "#fff",
                     padding: 4,
                     flexShrink: 0,
@@ -1380,7 +1382,7 @@ export default function App() {
             <div
               style={{
                 padding: isMobile ? 10 : 16,
-                borderBottom: `1px solid ${COLORS.line}`,
+                borderBottom: `2px solid ${COLORS.lineStrong}`,
                 background: "#f8fafc",
               }}
             >
@@ -1646,8 +1648,8 @@ export default function App() {
                               cursor: "pointer",
                               border:
                                 activeTournamentId === t.id
-                                  ? `1px solid ${COLORS.red}`
-                                  : `1px solid ${COLORS.line}`,
+                                  ? `2px solid ${COLORS.red}`
+                                  : `2px solid ${COLORS.lineStrong}`,
                               transition: "0.15s",
                               minWidth: 0,
                               boxShadow:
@@ -2056,6 +2058,7 @@ export default function App() {
                                 fontWeight: 800,
                                 textAlign: "left",
                                 fontSize: 15,
+                                borderBottom: `2px solid ${COLORS.blue}`,
                               }}
                             >
                               Name
@@ -2067,6 +2070,7 @@ export default function App() {
                                 fontWeight: 800,
                                 textAlign: "left",
                                 fontSize: 15,
+                                borderBottom: `2px solid ${COLORS.blue}`,
                               }}
                             >
                               Passnummer
@@ -2078,6 +2082,7 @@ export default function App() {
                                 fontWeight: 800,
                                 textAlign: "left",
                                 fontSize: 15,
+                                borderBottom: `2px solid ${COLORS.blue}`,
                               }}
                             >
                               Aktionen
@@ -2094,7 +2099,7 @@ export default function App() {
                                 borderBottom:
                                   index === filteredAndSortedPlayers.length - 1
                                     ? "none"
-                                    : `1px solid ${COLORS.line}`,
+                                    : `2px solid ${COLORS.line}`,
                               }}
                             >
                               <td
@@ -2234,7 +2239,7 @@ export default function App() {
                           height: 96,
                           objectFit: "contain",
                           borderRadius: 16,
-                          border: `2px solid ${COLORS.red}`,
+                          border: `3px solid ${COLORS.red}`,
                           background: "#fff",
                           padding: 6,
                         }}
@@ -2291,7 +2296,7 @@ export default function App() {
                   width: isMobile ? 60 : 68,
                   borderRadius: 16,
                   objectFit: "contain",
-                  border: `2px solid ${COLORS.red}`,
+                  border: `3px solid ${COLORS.red}`,
                   background: "#fff",
                   padding: 4,
                   flexShrink: 0,
@@ -2385,8 +2390,8 @@ export default function App() {
                     cursor: "pointer",
                     border:
                       activeTournamentId === t.id
-                        ? `1px solid ${COLORS.red}`
-                        : `1px solid ${COLORS.line}`,
+                        ? `2px solid ${COLORS.red}`
+                        : `2px solid ${COLORS.lineStrong}`,
                     transition: "0.15s",
                     minWidth: 0,
                     boxShadow:
