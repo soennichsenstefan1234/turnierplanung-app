@@ -2550,7 +2550,7 @@ export default function App() {
                   </button>
                   <button
                     onClick={deleteMyEntry}
-                    style={secondaryGhostButton(isMobile, {
+                    style={dangerButton(isMobile, {
                       width: isMobile ? "100%" : "auto",
                     })}
                   >
