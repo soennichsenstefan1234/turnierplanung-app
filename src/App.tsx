@@ -6,10 +6,11 @@ const supabase = createClient(
   import.meta.env.VITE_SUPABASE_ANON_KEY
 );
 
+const APP_TITLE_STORAGE_KEY = "sv_ottmaring_turnierplanung_app_title";
 const LOGO_BUCKET = "vereinslogos";
-const LOGO_FILE_NAME = "logo_hoechstaedt.png";
+const LOGO_FILE_NAME = "logo_ottmaring.png";
 const CLUB_LOGO_PUBLIC_URL =
-  "https://qlcbiguuzkfhqsphnuwn.supabase.co/storage/v1/object/public/vereinslogos/logo_hoechstaedt.png";
+  "https://jsiizgfaslvmizcbaoqu.supabase.co/storage/v1/object/public/vereinslogos/logo_ottmaring.png";
 
 type Player = {
   id: string;
@@ -39,6 +40,7 @@ type Entry = {
   team?: string;
   tournament_id: string;
   status: string;
+  created_at?: string;
 };
 
 const teamOptions = [
@@ -599,8 +601,8 @@ export default function App() {
   >("turniere");
   const [showTournamentForm, setShowTournamentForm] = useState(false);
 
-  const [appTitle, setAppTitle] = useState("SSV Höchstädt Turnierplanung");
-  const [titleInput, setTitleInput] = useState("SSV Höchstädt Turnierplanung");
+  const [appTitle, setAppTitle] = useState("SV Ottmaring Turnierplanung");
+  const [titleInput, setTitleInput] = useState("SV Ottmaring Turnierplanung");
   const [logoVersion, setLogoVersion] = useState(Date.now());
   const [loadError, setLoadError] = useState("");
 
@@ -638,7 +640,7 @@ export default function App() {
     document.body.style.overflowX = "hidden";
     document.body.style.maxWidth = "100vw";
 
-    const savedTitle = localStorage.getItem("turnierplanung_app_title");
+    const savedTitle = localStorage.getItem(APP_TITLE_STORAGE_KEY);
 
     if (savedTitle) {
       setAppTitle(savedTitle);
@@ -1051,9 +1053,9 @@ export default function App() {
   }
 
   function saveSettings() {
-    const finalTitle = titleInput || "SSV Höchstädt Turnierplanung";
+    const finalTitle = titleInput || "SV Ottmaring Turnierplanung";
     setAppTitle(finalTitle);
-    localStorage.setItem("turnierplanung_app_title", finalTitle);
+    localStorage.setItem(APP_TITLE_STORAGE_KEY, finalTitle);
     alert("Überschrift gespeichert.");
   }
 
