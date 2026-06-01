@@ -10,7 +10,7 @@ const APP_TITLE_STORAGE_KEY = "sv_ottmaring_turnierplanung_app_title";
 const LOGO_BUCKET = "vereinslogos";
 const LOGO_FILE_NAME = "logo_ottmaring.png";
 const CLUB_LOGO_PUBLIC_URL =
-  "https://jsiizgfaslvmizcbaoqu.supabase.co/storage/v1/object/public/vereinslogos/logo_ottmaring.png";
+"https://qlcbiguuzkfhqsphnuwn.supabase.co/storage/v1/object/public/vereinslogos/logo_hoechstaedt.png";
 
 type Player = {
   id: string;
@@ -1146,7 +1146,7 @@ export default function App() {
               style={{
                 width: 88,
                 height: 88,
-                objectFit: "contain",
+                objectFit: "contain"
                 borderRadius: 18,
                 marginBottom: 16,
                 border: `3px solid ${COLORS.red}`,
