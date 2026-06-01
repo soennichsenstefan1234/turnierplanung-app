@@ -49,6 +49,8 @@ const teamOptions = [
   "3. Mannschaft",
   "4. Mannschaft",
   "Damen-Mannschaft",
+"Duo-Team",
+"Mix-Team",
   "Ü50-Mannschaft",
   "Gemischtes Team",
 ];
