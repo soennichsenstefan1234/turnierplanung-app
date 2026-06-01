@@ -603,8 +603,8 @@ export default function App() {
   >("turniere");
   const [showTournamentForm, setShowTournamentForm] = useState(false);
 
-  const [appTitle, setAppTitle] = useState("SV Ottmaring Turnierplanung");
-  const [titleInput, setTitleInput] = useState("SV Ottmaring Turnierplanung");
+  const [appTitle, setAppTitle] = useState("SSV Höchstädt Turnierplanung");
+const [titleInput, setTitleInput] = useState("SSV Höchstädt Turnierplanung");
   const [logoVersion, setLogoVersion] = useState(Date.now());
   const [loadError, setLoadError] = useState("");
 
@@ -1055,7 +1055,7 @@ export default function App() {
   }
 
   function saveSettings() {
-    const finalTitle = titleInput || "SV Ottmaring Turnierplanung";
+    const finalTitle = titleInput || "SSV Höchstädt Turnierplanung";
     setAppTitle(finalTitle);
     localStorage.setItem(APP_TITLE_STORAGE_KEY, finalTitle);
     alert("Überschrift gespeichert.");
