@@ -8,7 +8,7 @@ const supabase = createClient(
 
 const APP_TITLE_STORAGE_KEY = "sv_ottmaring_turnierplanung_app_title";
 const LOGO_BUCKET = "vereinslogos";
-const LOGO_FILE_NAME = "logo_ottmaring.png";
+const LOGO_FILE_NAME = "logo_hoechstaedt.png";
 const CLUB_LOGO_PUBLIC_URL =
 "https://qlcbiguuzkfhqsphnuwn.supabase.co/storage/v1/object/public/vereinslogos/logo_hoechstaedt.png";
 
