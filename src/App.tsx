@@ -6,7 +6,7 @@ const supabase = createClient(
   import.meta.env.VITE_SUPABASE_ANON_KEY
 );
 
-const APP_TITLE_STORAGE_KEY = "sv_ottmaring_turnierplanung_app_title";
+const APP_TITLE_STORAGE_KEY = "ssv_hoechstaedt_turnierplanung_app_title";
 const LOGO_BUCKET = "vereinslogos";
 const LOGO_FILE_NAME = "logo_hoechstaedt.png";
 const CLUB_LOGO_PUBLIC_URL =

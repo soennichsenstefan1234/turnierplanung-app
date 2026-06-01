@@ -1,6 +1,6 @@
 {
   "name": "SSV Höchstädt Turnierplanung",
-  "short_name": "SSV Höchstädt",
+  "short_name": "Turnierplanung",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
