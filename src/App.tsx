@@ -1146,7 +1146,7 @@ export default function App() {
               style={{
                 width: 88,
                 height: 88,
-                objectFit: "contain"
+                objectFit: "contain",
                 borderRadius: 18,
                 marginBottom: 16,
                 border: `3px solid ${COLORS.red}`,
