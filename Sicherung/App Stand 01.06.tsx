@@ -19,7 +19,6 @@ type Player = {
   role?: string;
   password?: string;
   pass_number?: string;
-pass_expiry?: string;
 };
 
 type Tournament = {
@@ -614,7 +613,6 @@ const [titleInput, setTitleInput] = useState("SSV Höchstädt Turnierplanung");
   const [playerRole, setPlayerRole] = useState("Spieler");
   const [playerPassword, setPlayerPassword] = useState("");
   const [playerPassNumber, setPlayerPassNumber] = useState("");
-const [playerPassExpiry, setPlayerPassExpiry] = useState("");
   const [playerSearch, setPlayerSearch] = useState("");
   const [playerSort, setPlayerSort] = useState<
     "name_asc" | "name_desc" | "pass_asc" | "pass_desc"
@@ -870,7 +868,6 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
     setPlayerRole("Spieler");
     setPlayerPassword("");
     setPlayerPassNumber("");
-    setPlayerPassExpiry("");
   }
 
   function editPlayer(player: Player) {
@@ -879,7 +876,6 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
     setPlayerRole(player.role || "Spieler");
     setPlayerPassword(player.password || "");
     setPlayerPassNumber(player.pass_number || "");
-    setPlayerPassExpiry(player.pass_expiry || "");
     setAdminTab("spieler");
   }
 
@@ -914,7 +910,6 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
           role: playerRole,
           password: playerPassword,
           pass_number: normalizedPassNumber,
-          pass_expiry: playerPassExpiry,
         })
         .eq("id", editingPlayerId);
 
@@ -928,7 +923,6 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
         role: playerRole,
         password: playerPassword,
         pass_number: normalizedPassNumber,
-        pass_expiry: playerPassExpiry,
       });
 
       if (error) {
@@ -1921,15 +1915,6 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
                         />
                       </FormField>
 
-                      <FormField label="Ablaufdatum">
-                        <input
-                          type="date"
-                          value={playerPassExpiry}
-                          onChange={(e) => setPlayerPassExpiry(e.target.value)}
-                          style={inputStyle(isMobile)}
-                        />
-                      </FormField>
-
                       <FormField label="Rolle">
                         <select
                           value={playerRole}
@@ -2092,7 +2077,7 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
                                 borderBottom: `2px solid ${COLORS.blue}`,
                               }}
                             >
-                              Passnummer / Ablaufdatum
+                              Passnummer
                             </th>
                             <th
                               style={{
@@ -2143,20 +2128,11 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
                                   verticalAlign: "middle",
                                 }}
                               >
-                               <>
-                             {p.pass_number || "-"}
-                             {p.pass_expiry
-                                 ? ` / ${new Date(p.pass_expiry).toLocaleDateString("de-DE", {
-                                    day: "2-digit",
-                                    month: "2-digit",
-                                    year: "numeric",
-                                  })}`
-                                 : ""}
-                              </>
+                                {p.pass_number || "-"}
                               </td>
-                                
+
                               <td
-                                 style={{
+                                style={{
                                   padding: "9px 12px",
                                   textAlign: "left",
                                   verticalAlign: "middle",
