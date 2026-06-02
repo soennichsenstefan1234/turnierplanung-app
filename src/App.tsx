@@ -99,6 +99,79 @@ function normalizePassNumber(value: string) {
   return value.trim();
 }
 
+function getPassStatusColor(passExpiry?: string) {
+  if (!passExpiry) return "#9ca3af";
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const expiry = new Date(passExpiry);
+  expiry.setHours(0, 0, 0, 0);
+
+  const diffTime = expiry.getTime() - today.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  if (diffDays < 0) return "#dc2626";
+  if (diffDays <= 180) return "#f59e0b";
+  return "#16a34a";
+}
+
+function PassStatusLegend() {
+  const itemStyle = {
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
+    marginBottom: 8,
+    fontSize: 13,
+    color: COLORS.blue,
+  };
+
+  const dotStyle = (color: string) => ({
+    width: 12,
+    height: 12,
+    borderRadius: "50%",
+    backgroundColor: color,
+    display: "inline-block",
+    flexShrink: 0,
+  });
+
+  return (
+    <div
+      style={{
+        marginTop: 18,
+        padding: 14,
+        border: `1px solid ${COLORS.border}`,
+        borderRadius: 14,
+        background: "#fff",
+      }}
+    >
+      <div style={{ fontWeight: 800, marginBottom: 10, color: COLORS.blue }}>
+        Pass-Ablaufdatum
+      </div>
+
+      <div style={itemStyle}>
+        <span style={dotStyle("#16a34a")} />
+        <span>Grün: länger als 6 Monate gültig</span>
+      </div>
+
+      <div style={itemStyle}>
+        <span style={dotStyle("#f59e0b")} />
+        <span>Gelb: läuft innerhalb von 6 Monaten ab</span>
+      </div>
+
+      <div style={itemStyle}>
+        <span style={dotStyle("#dc2626")} />
+        <span>Rot: bereits abgelaufen</span>
+      </div>
+
+      <div style={{ ...itemStyle, marginBottom: 0 }}>
+        <span style={dotStyle("#9ca3af")} />
+        <span>Grau: kein Ablaufdatum hinterlegt</span>
+      </div>
+    </div>
+  );
+}
+
 function shellStyle(isMobile: boolean): React.CSSProperties {
   return {
     minHeight: "100vh",
@@ -1979,6 +2052,9 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
                         >
                           Zurücksetzen
                         </button>
+
+                       <PassStatusLegend />
+
                       </div>
                     </div>
                   </div>
@@ -2144,15 +2220,33 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
                                 }}
                               >
                                <>
-                             {p.pass_number || "-"}
-                             {p.pass_expiry
-                                 ? ` / ${new Date(p.pass_expiry).toLocaleDateString("de-DE", {
-                                    day: "2-digit",
-                                    month: "2-digit",
-                                    year: "numeric",
-                                  })}`
-                                 : ""}
-                              </>
+                             <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+  <span
+    title={
+      !p.pass_expiry
+        ? "Kein Ablaufdatum hinterlegt"
+        : "Pass-Ablaufdatum"
+    }
+    style={{
+      width: 12,
+      height: 12,
+      borderRadius: "50%",
+      backgroundColor: getPassStatusColor(p.pass_expiry),
+      display: "inline-block",
+      flexShrink: 0,
+    }}
+  />
+  <span>
+    {p.pass_number || "-"}
+    {p.pass_expiry
+      ? ` / ${new Date(p.pass_expiry).toLocaleDateString("de-DE", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        })}`
+      : ""}
+  </span>
+</span>                              </>
                               </td>
                                 
                               <td
