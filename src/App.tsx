@@ -664,6 +664,7 @@ export default function App() {
   const [players, setPlayers] = useState<Player[]>([]);
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
   const [entries, setEntries] = useState<Entry[]>([]);
+  const [seenTournamentIds, setSeenTournamentIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
   const [selectedPlayerId, setSelectedPlayerId] = useState("");
@@ -784,7 +785,7 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
         ) {
           return current;
         }
-        return loadedTournaments[0]?.id || "";
+        return "";
       });
     } catch (error) {
       const message =
@@ -873,7 +874,50 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
     return player?.pass_number || "-";
   }
 
-  function login() {
+  async function loadSeenTournaments(playerId: string) {
+    const { data, error } = await supabase
+      .from("seen_tournaments")
+      .select("tournament_id")
+      .eq("player_id", playerId);
+
+    if (error) {
+      console.error("Gesehene Turniere konnten nicht geladen werden:", error.message);
+      setSeenTournamentIds([]);
+      return;
+    }
+
+    setSeenTournamentIds(
+      ((data as { tournament_id: string }[]) || []).map((row) =>
+        String(row.tournament_id)
+      )
+    );
+  }
+
+  async function markTournamentAsSeen(tournamentId: string) {
+    if (!currentUser) return;
+
+    const tournamentIdValue = String(tournamentId);
+
+    if (seenTournamentIds.includes(tournamentIdValue)) {
+      return;
+    }
+
+    setSeenTournamentIds((current) => [...current, tournamentIdValue]);
+
+    const { error } = await supabase.from("seen_tournaments").upsert(
+      {
+        player_id: currentUser.id,
+        tournament_id: tournamentIdValue,
+      },
+      { onConflict: "player_id,tournament_id" }
+    );
+
+    if (error) {
+      console.error("Turnier konnte nicht als gesehen gespeichert werden:", error.message);
+    }
+  }
+
+  async function login() {
     if (!selectedPlayer) {
       alert("Kein Spieler ausgewählt.");
       return;
@@ -882,6 +926,8 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
     if ((selectedPlayer.password || "") === password) {
       setCurrentUser(selectedPlayer);
       setPassword("");
+      setActiveTournamentId("");
+      await loadSeenTournaments(selectedPlayer.id);
     } else {
       alert("Falsches Passwort");
     }
@@ -890,6 +936,8 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
   function logout() {
     setCurrentUser(null);
     setPassword("");
+    setActiveTournamentId("");
+    setSeenTournamentIds([]);
   }
 
   async function saveStatus(status: string) {
@@ -1287,14 +1335,14 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     onKeyDown={(e) => {
-                      if (e.key === "Enter") login();
+                      if (e.key === "Enter") void login();
                     }}
                     style={inputStyle(isMobile)}
                   />
                 </FormField>
 
                 <button
-                  onClick={login}
+                  onClick={() => void login()}
                   style={{ ...primaryButton(isMobile), width: "100%" }}
                 >
                   Anmelden
@@ -2487,16 +2535,34 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
             Wähle ein Turnier aus, um Details und Teilnehmer direkt darunter zu sehen
           </div>
 
+          {tournaments.filter((t) => !seenTournamentIds.includes(String(t.id))).length > 0 ? (
+            <div
+              style={{
+                ...pillStyle("red"),
+                marginBottom: 12,
+                width: "fit-content",
+              }}
+            >
+              🔴 {tournaments.filter((t) => !seenTournamentIds.includes(String(t.id))).length} neue Turniere
+            </div>
+          ) : null}
+
           <div style={{ display: "grid", gap: 10, minWidth: 0 }}>
             {tournaments.map((t) => {
               const isOpen = activeTournamentId === t.id;
+              const isNew = !seenTournamentIds.includes(String(t.id));
 
               return (
                 <div key={t.id} style={{ minWidth: 0 }}>
                   <div
-                    onClick={() =>
-                      setActiveTournamentId(isOpen ? "" : t.id)
-                    }
+                    onClick={() => {
+                      if (isOpen) {
+                        setActiveTournamentId("");
+                      } else {
+                        setActiveTournamentId(t.id);
+                        void markTournamentAsSeen(t.id);
+                      }
+                    }}
                     style={{
                       padding: 13,
                       borderRadius: 14,
@@ -2544,8 +2610,14 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
                         {t.title}
                       </div>
 
-                      <div style={pillStyle("blue")}>
-                        {t.team_name || "Keine Mannschaft"}
+                      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+                        <div style={pillStyle("blue")}>
+                          {t.team_name || "Keine Mannschaft"}
+                        </div>
+
+                        {isNew ? (
+                          <div style={pillStyle("red")}>🔴 Neu</div>
+                        ) : null}
                       </div>
                     </div>
 
