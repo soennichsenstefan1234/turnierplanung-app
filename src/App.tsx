@@ -140,7 +140,7 @@ function PassStatusLegend() {
       style={{
         marginTop: 18,
         padding: 14,
-        border: `1px solid ${COLORS.border}`,
+        border: `1px solid ${COLORS.lineStrong}`,
         borderRadius: 14,
         background: "#fff",
       }}
@@ -2481,252 +2481,252 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
           </div>
         </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: isMobile ? "1fr" : "320px minmax(0,1fr)",
-            gap: 18,
-            alignItems: "start",
-            minWidth: 0,
-            width: "100%",
-            maxWidth: "100%",
-            overflowX: "hidden",
-            boxSizing: "border-box",
-          }}
-        >
-          <div style={cardStyle(isMobile)}>
-            <div style={sectionTitleStyle(isMobile)}>Turniere</div>
-            <div style={sectionSubTitleStyle()}>
-              Wähle ein Turnier aus, um Details und Teilnehmer zu sehen
-            </div>
-
-            <div style={{ display: "grid", gap: 8, minWidth: 0 }}>
-              {tournaments.map((t) => (
-                <div
-                  key={t.id}
-                  onClick={() => setActiveTournamentId(t.id)}
-                  style={{
-                    padding: 13,
-                    borderRadius: 14,
-                    background: activeTournamentId === t.id ? "#fff0f2" : COLORS.soft,
-                    cursor: "pointer",
-                    border:
-                      activeTournamentId === t.id
-                        ? `2px solid ${COLORS.red}`
-                        : `2px solid ${COLORS.lineStrong}`,
-                    transition: "0.15s",
-                    minWidth: 0,
-                    boxShadow:
-                      activeTournamentId === t.id
-                        ? "0 8px 18px rgba(217,4,22,0.08)"
-                        : "none",
-                    overflow: "hidden",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: 12,
-                      color: COLORS.muted,
-                      marginBottom: 4,
-                      fontWeight: 600,
-                      wordBreak: "break-word",
-                      overflowWrap: "anywhere",
-                    }}
-                  >
-                    {formatDate(t.date)}
-                  </div>
-                  <div
-                    style={{
-                      fontWeight: 800,
-                      color: activeTournamentId === t.id ? COLORS.redDark : COLORS.blue,
-                      wordBreak: "break-word",
-                      overflowWrap: "anywhere",
-                      whiteSpace: "normal",
-                      marginBottom: 6,
-                    }}
-                  >
-                    {t.title}
-                  </div>
-                  <div style={pillStyle("blue")}>{t.team_name || "Keine Mannschaft"}</div>
-                </div>
-              ))}
-
-              {tournaments.length === 0 ? (
-                <div style={emptyStateStyle()}>Noch keine Turniere vorhanden.</div>
-              ) : null}
-            </div>
+        <div style={{ ...cardStyle(isMobile), minWidth: 0, overflowX: "hidden" }}>
+          <div style={sectionTitleStyle(isMobile)}>Turniere</div>
+          <div style={sectionSubTitleStyle()}>
+            Wähle ein Turnier aus, um Details und Teilnehmer direkt darunter zu sehen
           </div>
 
-          <div style={{ ...cardStyle(isMobile), minWidth: 0, overflowX: "hidden" }}>
-            {activeTournament ? (
-              <>
-                <div
-                  style={{
-                    marginBottom: 14,
-                    display: "flex",
-                    justifyContent: "space-between",
-                    gap: 10,
-                    flexWrap: "wrap",
-                    alignItems: "center",
-                    minWidth: 0,
-                  }}
-                >
-                  <div style={{ minWidth: 0 }}>
-                    <h2
-                      style={{
-                        marginTop: 0,
-                        marginBottom: 8,
-                        color: COLORS.blue,
-                        wordBreak: "break-word",
-                        overflowWrap: "anywhere",
-                        whiteSpace: "normal",
-                        fontSize: isMobile ? 24 : 28,
-                      }}
-                    >
-                      {activeTournament.title}
-                    </h2>
-                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                      <span style={pillStyle("blue")}>
-                        {formatDate(activeTournament.date)}
-                      </span>
-                      <span style={pillStyle("green")}>
-                        Zusagen: {countDabei}
-                      </span>
-                      <span style={pillStyle("orange")}>
-                        Absagen: {countNichtDabei}
-                      </span>
-                    </div>
-                  </div>
-                </div>
+          <div style={{ display: "grid", gap: 10, minWidth: 0 }}>
+            {tournaments.map((t) => {
+              const isOpen = activeTournamentId === t.id;
 
-                <div style={detailBoxStyle(isMobile)}>
-                  <div style={detailRowStyle(isMobile)}>
-                    <div style={detailLabelStyle(isMobile)}>Datum:</div>
-                    <div style={detailValueStyle(isMobile)}>
-                      {formatDate(activeTournament.date)}
-                    </div>
-                  </div>
-                  <div style={detailRowStyle(isMobile)}>
-                    <div style={detailLabelStyle(isMobile)}>Meldung:</div>
-                    <div style={detailValueStyle(isMobile)}>
-                      {activeTournament.registration_time || "-"}
-                    </div>
-                  </div>
-                  <div style={detailRowStyle(isMobile)}>
-                    <div style={detailLabelStyle(isMobile)}>Beginn:</div>
-                    <div style={detailValueStyle(isMobile)}>
-                      {activeTournament.start_time || "-"}
-                    </div>
-                  </div>
-                  <div style={detailRowStyle(isMobile)}>
-                    <div style={detailLabelStyle(isMobile)}>Ort:</div>
-                    <div style={detailValueStyle(isMobile)}>
-                      {activeTournament.location || "-"}
-                    </div>
-                  </div>
-                  <div style={detailRowStyle(isMobile)}>
-                    <div style={detailLabelStyle(isMobile)}>Mannschaft:</div>
-                    <div style={detailValueStyle(isMobile)}>
-                      {activeTournament.team_name || "-"}
-                    </div>
-                  </div>
-                  <div style={detailRowStyle(isMobile)}>
-                    <div style={detailLabelStyle(isMobile)}>Turnierart:</div>
-                    <div style={detailValueStyle(isMobile)}>
-                      {activeTournament.tournamentType || "-"}
-                    </div>
-                  </div>
-                  <div style={detailRowStyle(isMobile)}>
-                    <div style={detailLabelStyle(isMobile)}>Pässe:</div>
-                    <div style={detailValueStyle(isMobile)}>
-                      {activeTournament.has_passes || "-"}
-                    </div>
-                  </div>
-                  <div style={{ ...detailRowStyle(isMobile), borderBottom: "none" }}>
-                    <div style={detailLabelStyle(isMobile)}>Bemerkung:</div>
-                    <div style={detailValueStyle(isMobile)}>
-                      {activeTournament.notes || "-"}
-                    </div>
-                  </div>
-                </div>
-
-                <div
-                  style={{
-                    display: "flex",
-                    gap: 10,
-                    flexWrap: "wrap",
-                    marginBottom: 18,
-                    flexDirection: isMobile ? "column" : "row",
-                  }}
-                >
-                  <button
-                    onClick={() => saveStatus("dabei")}
-                    style={successButton(isMobile, {
-                      width: isMobile ? "100%" : "auto",
-                    })}
-                  >
-                    Ich bin dabei
-                  </button>
-                  <button
-                    onClick={() => saveStatus("nicht dabei")}
-                    style={warnButton(isMobile, {
-                      width: isMobile ? "100%" : "auto",
-                    })}
-                  >
-                    Ich bin nicht dabei
-                  </button>
-                  <button
-                    onClick={deleteMyEntry}
-                    style={dangerButton(isMobile, {
-                      width: isMobile ? "100%" : "auto",
-                    })}
-                  >
-                    Meldung löschen
-                  </button>
-                </div>
-
-                <div
-                  style={{
-                    fontSize: 18,
-                    fontWeight: 800,
-                    marginBottom: 10,
-                    color: COLORS.blue,
-                  }}
-                >
-                  Teilnehmer
-                </div>
-
-                {activeEntries.length > 0 ? (
+              return (
+                <div key={t.id} style={{ minWidth: 0 }}>
                   <div
+                    onClick={() =>
+                      setActiveTournamentId(isOpen ? "" : t.id)
+                    }
                     style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 10,
-                      width: "100%",
-                      maxWidth: "100%",
+                      padding: 13,
+                      borderRadius: 14,
+                      background: isOpen ? "#fff0f2" : COLORS.soft,
+                      cursor: "pointer",
+                      border: isOpen
+                        ? `2px solid ${COLORS.red}`
+                        : `2px solid ${COLORS.lineStrong}`,
+                      transition: "0.15s",
                       minWidth: 0,
-                      overflowX: "hidden",
-                      boxSizing: "border-box",
+                      boxShadow: isOpen
+                        ? "0 8px 18px rgba(217,4,22,0.08)"
+                        : "none",
+                      overflow: "hidden",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      gap: 12,
                     }}
                   >
-                    {activeEntries.map((e) => (
-                      <ParticipantCard
-                        key={e.id}
-                        name={e.player_name}
-                        passNumber={getPassNumberByPlayerName(e.player_name)}
-                        status={e.status}
-                      />
-                    ))}
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                      <div
+                        style={{
+                          fontSize: 12,
+                          color: COLORS.muted,
+                          marginBottom: 4,
+                          fontWeight: 600,
+                          wordBreak: "break-word",
+                          overflowWrap: "anywhere",
+                        }}
+                      >
+                        {formatDate(t.date)}
+                      </div>
+
+                      <div
+                        style={{
+                          fontWeight: 800,
+                          color: isOpen ? COLORS.redDark : COLORS.blue,
+                          wordBreak: "break-word",
+                          overflowWrap: "anywhere",
+                          whiteSpace: "normal",
+                          marginBottom: 6,
+                        }}
+                      >
+                        {t.title}
+                      </div>
+
+                      <div style={pillStyle("blue")}>
+                        {t.team_name || "Keine Mannschaft"}
+                      </div>
+                    </div>
+
+                    <div
+                      style={{
+                        fontSize: 22,
+                        fontWeight: 900,
+                        color: isOpen ? COLORS.redDark : COLORS.blue,
+                        lineHeight: 1,
+                        flexShrink: 0,
+                      }}
+                    >
+                      {isOpen ? "▲" : "▼"}
+                    </div>
                   </div>
-                ) : (
-                  <div style={emptyStateStyle()}>
-                    Noch keine Teilnehmer vorhanden.
-                  </div>
-                )}
-              </>
-            ) : (
-              <div style={emptyStateStyle()}>Bitte ein Turnier auswählen.</div>
-            )}
+
+                  {isOpen ? (
+                    <div
+                      style={{
+                        ...cardStyle(isMobile),
+                        marginTop: 8,
+                        minWidth: 0,
+                        overflowX: "hidden",
+                      }}
+                    >
+                      <div
+                        style={{
+                          marginBottom: 14,
+                          display: "flex",
+                          justifyContent: "space-between",
+                          gap: 10,
+                          flexWrap: "wrap",
+                          alignItems: "center",
+                          minWidth: 0,
+                        }}
+                      >
+                        <div style={{ minWidth: 0 }}>
+                          <h2
+                            style={{
+                              marginTop: 0,
+                              marginBottom: 8,
+                              color: COLORS.blue,
+                              wordBreak: "break-word",
+                              overflowWrap: "anywhere",
+                              whiteSpace: "normal",
+                              fontSize: isMobile ? 24 : 28,
+                            }}
+                          >
+                            {t.title}
+                          </h2>
+                          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                            <span style={pillStyle("blue")}>{formatDate(t.date)}</span>
+                            <span style={pillStyle("green")}>Zusagen: {countDabei}</span>
+                            <span style={pillStyle("orange")}>
+                              Absagen: {countNichtDabei}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div style={detailBoxStyle(isMobile)}>
+                        <div style={detailRowStyle(isMobile)}>
+                          <div style={detailLabelStyle(isMobile)}>Datum:</div>
+                          <div style={detailValueStyle(isMobile)}>{formatDate(t.date)}</div>
+                        </div>
+                        <div style={detailRowStyle(isMobile)}>
+                          <div style={detailLabelStyle(isMobile)}>Meldung:</div>
+                          <div style={detailValueStyle(isMobile)}>
+                            {t.registration_time || "-"}
+                          </div>
+                        </div>
+                        <div style={detailRowStyle(isMobile)}>
+                          <div style={detailLabelStyle(isMobile)}>Beginn:</div>
+                          <div style={detailValueStyle(isMobile)}>{t.start_time || "-"}</div>
+                        </div>
+                        <div style={detailRowStyle(isMobile)}>
+                          <div style={detailLabelStyle(isMobile)}>Ort:</div>
+                          <div style={detailValueStyle(isMobile)}>{t.location || "-"}</div>
+                        </div>
+                        <div style={detailRowStyle(isMobile)}>
+                          <div style={detailLabelStyle(isMobile)}>Mannschaft:</div>
+                          <div style={detailValueStyle(isMobile)}>{t.team_name || "-"}</div>
+                        </div>
+                        <div style={detailRowStyle(isMobile)}>
+                          <div style={detailLabelStyle(isMobile)}>Turnierart:</div>
+                          <div style={detailValueStyle(isMobile)}>
+                            {t.tournamentType || "-"}
+                          </div>
+                        </div>
+                        <div style={detailRowStyle(isMobile)}>
+                          <div style={detailLabelStyle(isMobile)}>Pässe:</div>
+                          <div style={detailValueStyle(isMobile)}>{t.has_passes || "-"}</div>
+                        </div>
+                        <div style={{ ...detailRowStyle(isMobile), borderBottom: "none" }}>
+                          <div style={detailLabelStyle(isMobile)}>Bemerkung:</div>
+                          <div style={detailValueStyle(isMobile)}>{t.notes || "-"}</div>
+                        </div>
+                      </div>
+
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: 10,
+                          flexWrap: "wrap",
+                          marginBottom: 18,
+                          flexDirection: isMobile ? "column" : "row",
+                        }}
+                      >
+                        <button
+                          onClick={() => saveStatus("dabei")}
+                          style={successButton(isMobile, {
+                            width: isMobile ? "100%" : "auto",
+                          })}
+                        >
+                          Ich bin dabei
+                        </button>
+                        <button
+                          onClick={() => saveStatus("nicht dabei")}
+                          style={warnButton(isMobile, {
+                            width: isMobile ? "100%" : "auto",
+                          })}
+                        >
+                          Ich bin nicht dabei
+                        </button>
+                        <button
+                          onClick={deleteMyEntry}
+                          style={dangerButton(isMobile, {
+                            width: isMobile ? "100%" : "auto",
+                          })}
+                        >
+                          Meldung löschen
+                        </button>
+                      </div>
+
+                      <div
+                        style={{
+                          fontSize: 18,
+                          fontWeight: 800,
+                          marginBottom: 10,
+                          color: COLORS.blue,
+                        }}
+                      >
+                        Teilnehmer
+                      </div>
+
+                      {activeEntries.length > 0 ? (
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 10,
+                            width: "100%",
+                            maxWidth: "100%",
+                            minWidth: 0,
+                            overflowX: "hidden",
+                            boxSizing: "border-box",
+                          }}
+                        >
+                          {activeEntries.map((e) => (
+                            <ParticipantCard
+                              key={e.id}
+                              name={e.player_name}
+                              passNumber={getPassNumberByPlayerName(e.player_name)}
+                              status={e.status}
+                            />
+                          ))}
+                        </div>
+                      ) : (
+                        <div style={emptyStateStyle()}>
+                          Noch keine Teilnehmer vorhanden.
+                        </div>
+                      )}
+                    </div>
+                  ) : null}
+                </div>
+              );
+            })}
+
+            {tournaments.length === 0 ? (
+              <div style={emptyStateStyle()}>Noch keine Turniere vorhanden.</div>
+            ) : null}
           </div>
         </div>
       </div>
