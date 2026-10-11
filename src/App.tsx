@@ -1004,7 +1004,6 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
     const minute = Number(timeMatch[2]);
 
     const start = new Date(year, month - 1, day, hour, minute, 0);
-    const end = new Date(start.getTime() + 2 * 60 * 60 * 1000);
 
     const pad = (value: number) => String(value).padStart(2, "0");
     const toLocalIcsDate = (date: Date) =>
@@ -1023,12 +1022,7 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
       `Turniername: ${tournament.title || "-"}`,
       `Datum: ${formatDate(tournament.date)}`,
       `Beginn: ${tournament.start_time || "-"}`,
-      `Ausrichter: ${tournament.organizer || "-"}`,
       `Ort: ${tournament.location || "-"}`,
-      `Mannschaft: ${tournament.team_name || "-"}`,
-      `Turnierart: ${tournament.tournamentType || "-"}`,
-      `Pässe: ${tournament.has_passes || "-"}`,
-      `Bemerkung: ${tournament.notes || "-"}`,
     ].join("\n");
 
     const ics = [
@@ -1041,7 +1035,6 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
       `UID:${tournament.id}-${tournament.date}@ssv-hoechstaedt`,
       `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z")}`,
       `DTSTART:${toLocalIcsDate(start)}`,
-      `DTEND:${toLocalIcsDate(end)}`,
       `SUMMARY:${escapeIcs(tournament.title || "Stockturnier")}`,
       `LOCATION:${escapeIcs(tournament.location || "")}`,
       `DESCRIPTION:${escapeIcs(description)}`,
