@@ -28,6 +28,7 @@ type Tournament = {
   date: string;
   registration_time?: string;
   start_time?: string;
+  organizer?: string;
   location?: string;
   team_name?: string;
   tournamentType?: string;
@@ -701,6 +702,7 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
   const [tournamentDate, setTournamentDate] = useState("");
   const [registrationTime, setRegistrationTime] = useState("");
   const [startTime, setStartTime] = useState("");
+  const [organizer, setOrganizer] = useState("");
   const [location, setLocation] = useState("");
   const [teamName, setTeamName] = useState("1. Mannschaft");
   const [tournamentType, setTournamentType] = useState("Freies-Turnier");
@@ -985,6 +987,81 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
     await loadAll();
   }
 
+  function addTournamentToCalendar(tournament: Tournament) {
+    if (!tournament.date || !tournament.start_time) {
+      alert("Für die Kalenderübernahme müssen Datum und Beginn eingetragen sein.");
+      return;
+    }
+
+    const timeMatch = tournament.start_time.match(/(\d{1,2}):(\d{2})/);
+    if (!timeMatch) {
+      alert("Die Beginnzeit konnte nicht gelesen werden.");
+      return;
+    }
+
+    const [year, month, day] = tournament.date.split("-").map(Number);
+    const hour = Number(timeMatch[1]);
+    const minute = Number(timeMatch[2]);
+
+    const start = new Date(year, month - 1, day, hour, minute, 0);
+    const end = new Date(start.getTime() + 2 * 60 * 60 * 1000);
+
+    const pad = (value: number) => String(value).padStart(2, "0");
+    const toLocalIcsDate = (date: Date) =>
+      `${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}T${pad(
+        date.getHours()
+      )}${pad(date.getMinutes())}${pad(date.getSeconds())}`;
+
+    const escapeIcs = (value: string) =>
+      value
+        .replace(/\\/g, "\\\\")
+        .replace(/\n/g, "\\n")
+        .replace(/,/g, "\\,")
+        .replace(/;/g, "\\;");
+
+    const description = [
+      `Turniername: ${tournament.title || "-"}`,
+      `Datum: ${formatDate(tournament.date)}`,
+      `Beginn: ${tournament.start_time || "-"}`,
+      `Ausrichter: ${tournament.organizer || "-"}`,
+      `Ort: ${tournament.location || "-"}`,
+      `Mannschaft: ${tournament.team_name || "-"}`,
+      `Turnierart: ${tournament.tournamentType || "-"}`,
+      `Pässe: ${tournament.has_passes || "-"}`,
+      `Bemerkung: ${tournament.notes || "-"}`,
+    ].join("\n");
+
+    const ics = [
+      "BEGIN:VCALENDAR",
+      "VERSION:2.0",
+      "PRODID:-//SSV Hoechstaedt//Turnierplanung//DE",
+      "CALSCALE:GREGORIAN",
+      "METHOD:PUBLISH",
+      "BEGIN:VEVENT",
+      `UID:${tournament.id}-${tournament.date}@ssv-hoechstaedt`,
+      `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z")}`,
+      `DTSTART:${toLocalIcsDate(start)}`,
+      `DTEND:${toLocalIcsDate(end)}`,
+      `SUMMARY:${escapeIcs(tournament.title || "Stockturnier")}`,
+      `LOCATION:${escapeIcs(tournament.location || "")}`,
+      `DESCRIPTION:${escapeIcs(description)}`,
+      "END:VEVENT",
+      "END:VCALENDAR",
+    ].join("\r\n");
+
+    const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${(tournament.title || "Turnier")
+      .replace(/[^\p{L}\p{N}]+/gu, "_")
+      .replace(/^_+|_+$/g, "")}.ics`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
   function resetPlayerForm() {
     setEditingPlayerId(null);
     setPlayerName("");
@@ -1085,6 +1162,7 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
     setTournamentDate("");
     setRegistrationTime("");
     setStartTime("");
+    setOrganizer("");
     setLocation("");
     setTeamName("1. Mannschaft");
     setTournamentType("Freies-Turnier");
@@ -1103,6 +1181,7 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
     setTournamentDate(tournament.date || "");
     setRegistrationTime(tournament.registration_time || "");
     setStartTime(tournament.start_time || "");
+    setOrganizer(tournament.organizer || "");
     setLocation(tournament.location || "");
     setTeamName(tournament.team_name || "1. Mannschaft");
     setTournamentType(tournament.tournamentType || "Freies-Turnier");
@@ -1124,6 +1203,7 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
       date: tournamentDate,
       registration_time: registrationTime,
       start_time: startTime,
+      organizer,
       location,
       team_name: teamName,
       tournamentType,
@@ -1652,6 +1732,16 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
                           </select>
                         </FormField>
 
+                        <FormField label="Ausrichter">
+                          <textarea
+                            placeholder="z. B. SpVgg Joshofen-Bergheim"
+                            value={organizer}
+                            onChange={(e) => setOrganizer(e.target.value)}
+                            rows={2}
+                            style={textareaStyle(isMobile, { minHeight: 56 })}
+                          />
+                        </FormField>
+
                         <FormField label="Ort">
                           <textarea
                             placeholder="z. B. Stockschützen-Arena Höchstädt"
@@ -1908,6 +1998,12 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
                               <div style={detailLabelStyle(isMobile)}>Beginn:</div>
                               <div style={detailValueStyle(isMobile)}>
                                 {activeTournament.start_time || "-"}
+                              </div>
+                            </div>
+                            <div style={detailRowStyle(isMobile)}>
+                              <div style={detailLabelStyle(isMobile)}>Ausrichter:</div>
+                              <div style={detailValueStyle(isMobile)}>
+                                {activeTournament.organizer || "-"}
                               </div>
                             </div>
                             <div style={detailRowStyle(isMobile)}>
@@ -2694,6 +2790,10 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
                           <div style={detailValueStyle(isMobile)}>{t.start_time || "-"}</div>
                         </div>
                         <div style={detailRowStyle(isMobile)}>
+                          <div style={detailLabelStyle(isMobile)}>Ausrichter:</div>
+                          <div style={detailValueStyle(isMobile)}>{t.organizer || "-"}</div>
+                        </div>
+                        <div style={detailRowStyle(isMobile)}>
                           <div style={detailLabelStyle(isMobile)}>Ort:</div>
                           <div style={detailValueStyle(isMobile)}>{t.location || "-"}</div>
                         </div>
@@ -2726,6 +2826,14 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
                           flexDirection: isMobile ? "column" : "row",
                         }}
                       >
+                        <button
+                          onClick={() => addTournamentToCalendar(t)}
+                          style={mutedButton(isMobile, {
+                            width: isMobile ? "100%" : "auto",
+                          })}
+                        >
+                          📅 In Kalender übernehmen
+                        </button>
                         <button
                           onClick={() => saveStatus("dabei")}
                           style={successButton(isMobile, {
