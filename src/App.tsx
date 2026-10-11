@@ -994,22 +994,28 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
     }
 
     const timeMatch = tournament.start_time.match(/(\d{1,2}):(\d{2})/);
-    if (!timeMatch) {
+    if (!timeMatch || Number(timeMatch[1]) > 23 || Number(timeMatch[2]) > 59) {
       alert("Die Beginnzeit konnte nicht gelesen werden.");
       return;
     }
 
     const [year, month, day] = tournament.date.split("-").map(Number);
-    const hour = Number(timeMatch[1]);
-    const minute = Number(timeMatch[2]);
-
-    const start = new Date(year, month - 1, day, hour, minute, 0);
+    const date = new Date(Date.UTC(year, month - 1, day));
+    if (
+      !year || !month || !day ||
+      date.getUTCFullYear() !== year ||
+      date.getUTCMonth() !== month - 1 ||
+      date.getUTCDate() !== day
+    ) {
+      alert("Das Turnierdatum ist ungültig.");
+      return;
+    }
 
     const pad = (value: number) => String(value).padStart(2, "0");
-    const toLocalIcsDate = (date: Date) =>
-      `${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}T${pad(
-        date.getHours()
-      )}${pad(date.getMinutes())}${pad(date.getSeconds())}`;
+    const toIcsDay = (value: Date) =>
+      `${value.getUTCFullYear()}${pad(value.getUTCMonth() + 1)}${pad(value.getUTCDate())}`;
+    const nextDay = new Date(date);
+    nextDay.setUTCDate(nextDay.getUTCDate() + 1);
 
     const escapeIcs = (value: string) =>
       value
@@ -1017,13 +1023,6 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
         .replace(/\n/g, "\\n")
         .replace(/,/g, "\\,")
         .replace(/;/g, "\\;");
-
-    const description = [
-      `Turniername: ${tournament.title || "-"}`,
-      `Datum: ${formatDate(tournament.date)}`,
-      `Beginn: ${tournament.start_time || "-"}`,
-      `Ort: ${tournament.location || "-"}`,
-    ].join("\n");
 
     const ics = [
       "BEGIN:VCALENDAR",
@@ -1034,10 +1033,11 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
       "BEGIN:VEVENT",
       `UID:${tournament.id}-${tournament.date}@ssv-hoechstaedt`,
       `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z")}`,
-      `DTSTART:${toLocalIcsDate(start)}`,
+      `DTSTART;VALUE=DATE:${toIcsDay(date)}`,
+      `DTEND;VALUE=DATE:${toIcsDay(nextDay)}`,
       `SUMMARY:${escapeIcs(tournament.title || "Stockturnier")}`,
       `LOCATION:${escapeIcs(tournament.location || "")}`,
-      `DESCRIPTION:${escapeIcs(description)}`,
+      `DESCRIPTION:${escapeIcs(`Beginn: ${tournament.start_time}`)}`,
       "END:VEVENT",
       "END:VCALENDAR",
     ].join("\r\n");
