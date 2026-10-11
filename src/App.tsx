@@ -1000,22 +1000,22 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
     }
 
     const [year, month, day] = tournament.date.split("-").map(Number);
-    const date = new Date(Date.UTC(year, month - 1, day));
+    const hour = Number(timeMatch[1]);
+    const minute = Number(timeMatch[2]);
+    const start = new Date(year, month - 1, day, hour, minute, 0);
     if (
       !year || !month || !day ||
-      date.getUTCFullYear() !== year ||
-      date.getUTCMonth() !== month - 1 ||
-      date.getUTCDate() !== day
+      start.getFullYear() !== year ||
+      start.getMonth() !== month - 1 ||
+      start.getDate() !== day
     ) {
       alert("Das Turnierdatum ist ungültig.");
       return;
     }
-
+    const end = new Date(start.getTime() + 2 * 60 * 60 * 1000);
     const pad = (value: number) => String(value).padStart(2, "0");
-    const toIcsDay = (value: Date) =>
-      `${value.getUTCFullYear()}${pad(value.getUTCMonth() + 1)}${pad(value.getUTCDate())}`;
-    const nextDay = new Date(date);
-    nextDay.setUTCDate(nextDay.getUTCDate() + 1);
+    const toLocalIcsDate = (value: Date) =>
+      `${value.getFullYear()}${pad(value.getMonth() + 1)}${pad(value.getDate())}T${pad(value.getHours())}${pad(value.getMinutes())}${pad(value.getSeconds())}`;
 
     const escapeIcs = (value: string) =>
       value
@@ -1033,8 +1033,8 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
       "BEGIN:VEVENT",
       `UID:${tournament.id}-${tournament.date}@ssv-hoechstaedt`,
       `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z")}`,
-      `DTSTART;VALUE=DATE:${toIcsDay(date)}`,
-      `DTEND;VALUE=DATE:${toIcsDay(nextDay)}`,
+      `DTSTART:${toLocalIcsDate(start)}`,
+      `DTEND:${toLocalIcsDate(end)}`,
       `SUMMARY:${escapeIcs(tournament.title || "Stockturnier")}`,
       `LOCATION:${escapeIcs(tournament.location || "")}`,
       `DESCRIPTION:${escapeIcs(`Beginn: ${tournament.start_time}`)}`,
