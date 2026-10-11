@@ -2820,14 +2820,6 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
                         }}
                       >
                         <button
-                          onClick={() => addTournamentToCalendar(t)}
-                          style={mutedButton(isMobile, {
-                            width: isMobile ? "100%" : "auto",
-                          })}
-                        >
-                          📅 In Kalender übernehmen
-                        </button>
-                        <button
                           onClick={() => saveStatus("dabei")}
                           style={successButton(isMobile, {
                             width: isMobile ? "100%" : "auto",
@@ -2850,6 +2842,14 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
                           })}
                         >
                           Meldung löschen
+                        </button>
+                        <button
+                          onClick={() => addTournamentToCalendar(t)}
+                          style={mutedButton(isMobile, {
+                            width: isMobile ? "100%" : "auto",
+                          })}
+                        >
+                          📅 In Kalender übernehmen
                         </button>
                       </div>
 
