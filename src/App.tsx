@@ -8,6 +8,10 @@ const supabase = createClient(
 
 const APP_TITLE_STORAGE_KEY = "ssv_hoechstaedt_turnierplanung_app_title";
 const LOGO_BUCKET = "vereinslogos";
+const DOCUMENT_BUCKET = "turnierdateien";
+const DOCUMENT_TYPES = ["Ausschreibung", "Startliste", "Ergebnisliste"] as const;
+type DocumentType = typeof DOCUMENT_TYPES[number];
+type TournamentDocument = { type: DocumentType; path: string; name: string };
 const LOGO_FILE_NAME = "logo_hoechstaedt.png";
 const CLUB_LOGO_PUBLIC_URL =
 "https://qlcbiguuzkfhqsphnuwn.supabase.co/storage/v1/object/public/vereinslogos/logo_hoechstaedt.png";
@@ -666,6 +670,12 @@ export default function App() {
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
   const [entries, setEntries] = useState<Entry[]>([]);
   const [seenTournamentIds, setSeenTournamentIds] = useState<string[]>([]);
+  const [tournamentDocuments, setTournamentDocuments] = useState<Record<string, TournamentDocument[]>>({});
+  const [documentBusy, setDocumentBusy] = useState(false);
+  const [documentEmail, setDocumentEmail] = useState("");
+  const [documentPassword, setDocumentPassword] = useState("");
+  const [documentAuthenticated, setDocumentAuthenticated] = useState(false);
+
   const [loading, setLoading] = useState(true);
 
   const [selectedPlayerId, setSelectedPlayerId] = useState("");
@@ -737,9 +747,120 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
     window.addEventListener("resize", handleResize);
 
     void loadAll();
+    void supabase.auth.getUser().then(({ data }) => setDocumentAuthenticated(Boolean(data.user)));
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  async function loadTournamentDocuments(tournamentId: string) {
+    const { data, error } = await supabase.storage.from(DOCUMENT_BUCKET).list(tournamentId, { limit: 100 });
+    if (error) {
+      console.error("Turnierdokumente konnten nicht geladen werden:", error.message);
+      return;
+    }
+    const docs: TournamentDocument[] = (data || []).flatMap((file) => {
+      const type = DOCUMENT_TYPES.find((item) => file.name.startsWith(`${item}__`));
+      return type ? [{ type, path: `${tournamentId}/${file.name}`, name: file.name.split("__").slice(1).join("__").replace(/^\d+_/, "") }] : [];
+    });
+    docs.sort((a, b) => b.path.localeCompare(a.path));
+    setTournamentDocuments((old) => ({ ...old, [tournamentId]: docs }));
+  }
+
+  async function signInForDocuments() {
+    if (!documentEmail.trim() || !documentPassword) {
+      alert("Bitte E-Mail und Passwort des Supabase-Adminzugangs eingeben.");
+      return;
+    }
+    const { error } = await supabase.auth.signInWithPassword({ email: documentEmail.trim(), password: documentPassword });
+    setDocumentPassword("");
+    if (error) {
+      alert("Supabase-Anmeldung fehlgeschlagen: " + error.message);
+      return;
+    }
+    setDocumentAuthenticated(true);
+    alert("Dokumentenverwaltung freigeschaltet.");
+  }
+
+  async function uploadTournamentDocument(tournamentId: string, type: DocumentType, file?: File) {
+    if (!file) return;
+    if (!documentAuthenticated) {
+      alert("Bitte zuerst mit dem Supabase-Adminzugang anmelden.");
+      return;
+    }
+    const allowed = ["application/pdf", "image/jpeg", "image/png", "image/webp"];
+    if (!allowed.includes(file.type) || file.size > 15 * 1024 * 1024) {
+      alert("Erlaubt sind PDF, JPG, PNG und WEBP bis 15 MB.");
+      return;
+    }
+    setDocumentBusy(true);
+    try {
+      const oldFile = (tournamentDocuments[tournamentId] || []).find((d) => d.type === type);
+      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+      const path = `${tournamentId}/${type}__${Date.now()}_${safeName}`;
+      const { error } = await supabase.storage.from(DOCUMENT_BUCKET).upload(path, file, { contentType: file.type, upsert: false });
+      if (error) throw error;
+      if (oldFile) {
+        const { error: deleteError } = await supabase.storage.from(DOCUMENT_BUCKET).remove([oldFile.path]);
+        if (deleteError) alert("Neue Datei hochgeladen. Die alte Datei konnte nicht gelöscht werden: " + deleteError.message);
+      }
+      await loadTournamentDocuments(tournamentId);
+    } catch (error) {
+      alert("Fehler beim Hochladen: " + (error instanceof Error ? error.message : String(error)));
+    } finally {
+      setDocumentBusy(false);
+    }
+  }
+
+  async function deleteTournamentDocument(tournamentId: string, doc: TournamentDocument) {
+    if (!documentAuthenticated || !window.confirm(`${doc.type} wirklich löschen?`)) return;
+    setDocumentBusy(true);
+    const { error } = await supabase.storage.from(DOCUMENT_BUCKET).remove([doc.path]);
+    if (error) alert("Fehler beim Löschen: " + error.message);
+    await loadTournamentDocuments(tournamentId);
+    setDocumentBusy(false);
+  }
+
+  function renderTournamentDocuments(tournamentId: string, admin: boolean) {
+    const docs = tournamentDocuments[tournamentId] || [];
+    return (
+      <div style={{ ...softPanelStyle(isMobile), marginBottom: 18 }}>
+        <div style={sectionTitleStyle(isMobile)}>Turnierdokumente</div>
+        {admin && !documentAuthenticated ? (
+          <div style={{ display: "grid", gap: 8, marginBottom: 12 }}>
+            <div style={sectionSubTitleStyle()}>Zum Hochladen oder Löschen ist zusätzlich der Supabase-Adminzugang erforderlich.</div>
+            <input type="email" autoComplete="username" placeholder="Supabase-Admin-E-Mail" value={documentEmail} onChange={(e) => setDocumentEmail(e.target.value)} style={inputStyle(isMobile)} />
+            <input type="password" autoComplete="current-password" placeholder="Supabase-Passwort" value={documentPassword} onChange={(e) => setDocumentPassword(e.target.value)} style={inputStyle(isMobile)} />
+            <button type="button" onClick={() => void signInForDocuments()} style={mutedButton(isMobile)}>Für Dokumente anmelden</button>
+          </div>
+        ) : null}
+        <div style={{ display: "grid", gap: 12 }}>
+          {DOCUMENT_TYPES.map((type) => {
+            const doc = docs.find((d) => d.type === type);
+            const url = doc ? supabase.storage.from(DOCUMENT_BUCKET).getPublicUrl(doc.path).data.publicUrl : "";
+            return (
+              <div key={type} style={{ padding: 12, border: `1px solid ${COLORS.lineStrong}`, borderRadius: 12, background: "white" }}>
+                <div style={{ fontWeight: 700, marginBottom: 8 }}>{type}</div>
+                {doc ? <a href={url} target="_blank" rel="noopener noreferrer" style={{ overflowWrap: "anywhere" }}>📄 {doc.name || type} öffnen</a> : <span style={{ color: COLORS.muted }}>Noch keine Datei vorhanden</span>}
+                {admin && documentAuthenticated ? (
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 10 }}>
+                    <label style={{ ...mutedButton(isMobile), display: "inline-block", cursor: documentBusy ? "wait" : "pointer" }}>
+                      {doc ? "Datei ersetzen" : "Datei hochladen"}
+                      <input type="file" accept=".pdf,.jpg,.jpeg,.png,.webp" disabled={documentBusy} style={{ display: "none" }} onChange={(e) => { const file = e.target.files?.[0]; if (file) void uploadTournamentDocument(tournamentId, type, file); e.target.value = ""; }} />
+                    </label>
+                    {doc ? <button disabled={documentBusy} type="button" onClick={() => void deleteTournamentDocument(tournamentId, doc)} style={dangerButton(isMobile)}>Löschen</button> : null}
+                  </div>
+                ) : null}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  useEffect(() => {
+    if (activeTournamentId) void loadTournamentDocuments(activeTournamentId);
+  }, [activeTournamentId]);
 
   async function loadAll() {
     setLoading(true);
@@ -1974,6 +2095,7 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
                             </div>
                           </div>
 
+                          {renderTournamentDocuments(activeTournament.id, true)}
                           <div style={detailBoxStyle(isMobile)}>
                             <div style={detailRowStyle(isMobile)}>
                               <div style={detailLabelStyle(isMobile)}>Datum:</div>
@@ -2767,6 +2889,7 @@ const [playerPassExpiry, setPlayerPassExpiry] = useState("");
                         </div>
                       </div>
 
+                      {renderTournamentDocuments(t.id, false)}
                       <div style={detailBoxStyle(isMobile)}>
                         <div style={detailRowStyle(isMobile)}>
                           <div style={detailLabelStyle(isMobile)}>Datum:</div>
